@@ -1,0 +1,66 @@
+step width height
+基类父类的静态成员变量
+
+
+stl容器会复制一份 导致两个问题
+1 效率低 (测试后发现差不多) 且可以用move解决
+2 无法访问真正的地址 使用局限
+3 在容器中删除不会使容器外生成的变量删除 浪费内存 在函数中insert可解决这个问题 因为函数结束后此作用域中的变量会被自动释放（不用new）
+如果存指针 问题
+1 管理指针麻烦 存在内存泄露的问题
+2 set需要自定义仿函数
+
+list好处 删除方便
+
+使用set容器 每次insert时根据自定义<判断集合中是否存在该元素 不存在则复制一份后加入 存在则无操作 作用域结束后生成的变量自动释放  只有有效的会存在set里
+如果set存指针 指向的内存需要手动释放 从而需要判断此次insert是否有效
+
+
+此程序中：
+需要集合的部分使用set容器 存对象而非指针 在类中定义< 不可避免存在很多调用赋值构造函数的情况
+block由于需求必须存地址 使用智能指针 自动释放
+
+
+
+
+
+
+使用c++11新特性：
+auto 变量类型名太长时使用 
+for( : ) 替代迭代器 （无删除操作）
+智能指针 shared_ptr unique_ptr 自动释放内存 否则管理麻烦
+move 临时变量不会复制再销毁 减少低效的复制
+override 防止继承变重载
+final 不被继承 修饰类和结构体
+
+
+待完成：
+暂停时 可以通过stop frameUpdateTimer 停止刷新屏幕 但这是假的
+1 让用户的交互失效  鼠标 键盘
+2 让游戏内置的算法停止运行 如倒计时  道具
+
+
+问题在于暂停时已经startTimer并不能暂停 解决：放弃使用startTimer+TimerEvent 直接写入对应的对象 加属性animationremain hint不用指针 remain=0表示无
+同理 可以改propCreateTimer的形式
+block只存对象 不存地址
+读取的时候 先new 然后直接读进来
+Player.block* 与 linkLine.list<block*> 存code  读code后findBlockbyCode
+linkLine.list<block*>中假block的设计直接删除 将linkLine分为solution与turnpoints两个成员
+不存solution 不然每次删除没法定位 使用findBlock 遍历 效率太低  
+
+
+游戏开始与结束画面
+保存 暂停
+游戏结束的逻辑
+
+flash没有状态提示
+
+9/16更新：
+	该程序实现游戏的基本功能 但没有暂停、存读档、开始结束界面
+	待修改：
+	1 剥离出游戏本身的数据结构和算法 重新设计Game类 单例 调整接口 私有的放入private  QLink类只保留paint、mouse、keyEvent 一个game的实例 
+	2 由下至上重载每一个class/struct的输入输出函数 (不涉及stl) 并增加无参数的构造函数(仅初始化使用)
+	 存档时ofstream<<object 读档时 Object object;ifstream>>object;
+	  所有涉及到指针的object 均存*object
+	3 调整暂停的算法
+	4 增加开始、结束界面
