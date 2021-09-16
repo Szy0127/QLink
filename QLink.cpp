@@ -296,16 +296,6 @@ void QLink::keyPressEvent(QKeyEvent *event)
             propCreateTimer->stop();
         }
         return;
-    case Qt::Key_V:
-        save();
-        return;
-    case Qt::Key_B:
-        load();
-        return;
-    case Qt::Key_L:
-        for(const auto&player:players){
-            std::cout<<sizeof(player)<<std::endl;
-        }
     }
     if(!keyToDirection.count(event->key())){
         return;
@@ -320,36 +310,7 @@ void QLink::keyPressEvent(QKeyEvent *event)
         removeEmptyspace(players[playerID-1]);
         addEmptySpace(ox,oy);
     }
-}/*
-void QLink::timerEvent(QTimerEvent *event)
-{
-    if(event->timerId() == hintID){
-        hintFinish();
-        return;
-    }
-
-    if(event->timerId() == flashID){
-        flashFinish();
-        return;
-    }
-    if(event->timerId() == addTimeID){
-        addTimeFinish();
-        return;
-    }
-    if(!singlePlayer){
-        for(int i = 0 ; i < Config::playerNumber ; i++){
-            if(event->timerId()==freezeID[i]){
-                freezeFinish(players[i]);
-                return;
-            }
-            if(event->timerId()==dizzyID[i]){
-                dizzyFinish(players[i]);
-                return;
-            }
-        }
-    }
-
-}*/
+}
 
 bool QLink::flashTo(int x, int y)
 {
@@ -795,7 +756,6 @@ void QLink::createOneProp()
     Prop prop(empty.x,empty.y,Prop::color,type);
     props.push_back(std::move(prop));
     removeEmptyspace(prop);
-    std::cout<<sizeof(props);
 }
 void QLink::createPlayers()
 {
@@ -897,102 +857,4 @@ void QLink::dizzyStart(Player &player)
     player.setDizzy(Config::dizzyDuration);
 }
 
-void QLink::save(std::ofstream &f,int size,void * object)
-{
-    f.write((char*)&size,sizeof(int));
-    f.write((char*)object,size);
 
-}
-void QLink::load(std::ifstream &f,void *object)
-{
-    int size;
-    f.read((char*)&size,sizeof(int));
-    f.read((char*)object,size);
-
-}
-void QLink::save()
-{
-    std::ofstream f(path,std::ios::binary);
-
-    save(f,sizeof(solutions),(void*)&solutions);
-
-//    //存blocks
-//    size = blocks.size();
-//    f.write((char *)&size,sizeof(int));
-//    for(const auto &block:blocks){
-//        f.write((char*)&*block,sizeof(Block));
-//    }
-
-    //存players之前需要先把所有的
-//    int code[players.size()];
-//    for(size_t i = 0 ; i < players.size() ; i++){
-//        if(players[i].getBlock()){
-//            code[i] = players[i].getBlock()->code;
-//            players[i].removeBlock();
-//        }else{
-//            code[i] = 0;
-//        }
-//        players[i].removeBlock();
-//    }
-//    size = sizeof(players);
-//    f.write((char *)&size,sizeof(int));
-    //f.write((char*)&players,size);
-//    for(int i = 0 ; i < players.size() ; i++){
-
-//    }
-//    f.write((char *)&players,sizeof(int));
-
-
-
-    f.close();
-}
-void QLink::load()
-{
-    std::ifstream f(path,std::ios::binary);
-
-    solutions.clear();
-    load(f,(void*)&solutions);
-    int size;
-
-
-//    //读入props
-//    props.clear();
-//    f.read((char*)&size,sizeof(int));
-//    std::cout<<size;
-    //f.read((char*)&props,size);
-
-
-//    //读入blocks
-//    blocks.clear();
-//    f.read((char*)&size,sizeof(int));
-//    void *object;
-//    for(int i = 0 ; i < size ;i++){
-//        object = malloc(sizeof(Block));
-//        f.read((char*)object,sizeof(Block));
-//        blocks.push_back(std::shared_ptr<Block>((Block*)object));
-//    }
-
-    //读入players
-//    players.clear();
-//    f.read((char *)&size,sizeof(int));
-//    std::cout<<size;
-    //f.read((char*)&players,size);
-//    bool chooseBlock;
-//    for(auto &player:players){
-//        chooseBlock = player.getBlock() ? true:false;
-//        f.write((char*)&chooseBlock,sizeof(bool));
-//        if(chooseBlock){
-//            int code = player.getBlock()->code;
-//            f.write((char*)&code,sizeof(int));
-//        }
-//        player.removeBlock();
-//        f.write((char*)&player,sizeof(Player));
-//    }
-
-
-
-
-    f.close();
-
-
-}

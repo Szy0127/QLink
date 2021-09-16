@@ -183,11 +183,6 @@ protected:
 
     bool link(Block const &block1, Block const &block2);//判断两个方块是否可以连接
 
-    void save();
-    void save(std::ofstream &f,int size,void * object);
-    void load();
-    void load(std::ifstream &f,void * object);
-
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
