@@ -64,3 +64,6 @@ flash没有状态提示
 	  所有涉及到指针的object 均存*object
 	3 调整暂停的算法
 	4 增加开始、结束界面
+
+9/19更新：
+新建game类 简化qlink类测试没问题 具体的变量及public private没有细究

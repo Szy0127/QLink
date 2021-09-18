@@ -2,9 +2,11 @@ QT += widgets
 
 HEADERS       = QLink.h \
     Config.h \
-    Element.h
+    Element.h \
+    Game.h
 SOURCES       = QLink.cpp \
                 Element.cpp \
+                Game.cpp \
                 config.cpp \
                 main.cpp
 
