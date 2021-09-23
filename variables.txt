@@ -6,20 +6,20 @@
 
     int timeRemain; 
     bool stop;
-    bool **map;
+√    bool **map;
 
     bool gameover;
 
- **   std::vector<Player> players;
- **   std::list<std::shared_ptr<Block>> blocks;
- **   std::list<Prop> props;
+√   std::vector<Player> players;
+ √   std::list<std::shared_ptr<Block>> blocks;
+√   std::list<Prop> props;
 
-    std::unique_ptr<Hint> hint;
+ √   std::unique_ptr<Hint> hint;
 
 
-**    std::set<Point> emptySpace;
- **   std::set<Block> blocksAccessible;
- **   std::set<Solution> solutions;
+ √   std::set<Point> emptySpace;
+ √   std::set<Block> blocksAccessible;
+ √  std::set<Solution> solutions;
  
  
  

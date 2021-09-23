@@ -12,6 +12,7 @@ class Element
     public:
     static const int stepx;
     static const int stepy;
+    Element(){};
     Element(int ix,int iy,QColor ic):x(ix),y(iy),color(ic){}// x y 为具体坐标
     QWidget *parent;
     int x;//由于Qt 的paint函数是根据左上角坐标绘制 所以这里存储的xy也是左上角坐标
@@ -45,6 +46,7 @@ public:
     enum{animationAmount = 2};//记录动画时间的数组 在编译时确定大小 需要字面量 static const虽然是常量但还是变量
 
     int type;
+    Prop(){};
     Prop(int ix,int iy,QColor ic,int t):Element(ix,iy,ic),type(t){}
     virtual void draw(QPainter &painter)const override;
     bool operator ==(const Prop &b)const{
@@ -72,6 +74,7 @@ private:
     int status;
 public:
     int code;
+    Block(){};
     Block(int ix,int iy,QColor ic,int c):Element(ix,iy,ic),status(0),code(c){}
     virtual void draw(QPainter &painter)const override;
     bool operator <(const Block &b)const{ // set
@@ -107,6 +110,7 @@ private:
     int freezeSecondsRemain;
 public:
     int id;//1 2 3 4
+    Player(){};
     Player(int ix,int iy,QColor ic,int i);
     virtual void draw(QPainter &painter)const override;
     void setBlock(std::shared_ptr<Block> b);

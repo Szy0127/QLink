@@ -815,3 +815,179 @@ void Game::move(int key)
         addEmptySpace(ox,oy);
     }
 }
+
+void Game::save(std::string path)
+{
+    std::ofstream f(path,std::ios::binary);
+
+    int size = props.size();
+    f.write((char *)&size,sizeof(int));
+    for(const auto&prop:props){
+        f.write((char *)&prop,sizeof(Prop));
+    }
+
+    size = blocks.size();
+    f.write((char *)&size,sizeof(int));
+    for(const auto&block:blocks){
+        f.write((char *)&*block,sizeof(Block));
+    }
+
+    size = players.size();
+    f.write((char *)&size,sizeof(int));
+    int code;
+    for(auto&player:players){
+        code = 0;
+        if(player.getBlock()){
+            code = player.getBlock()->code;
+            player.removeBlock();
+        }
+        f.write((char *)&player,sizeof(Player));
+        f.write((char *)&code,sizeof(int));
+    }
+
+    size = emptySpace.size();
+    f.write((char *)&size,sizeof(int));
+    for(const auto&point:emptySpace){
+        f.write((char *)&point,sizeof(Point));
+    }
+
+    size = blocksAccessible.size();
+    f.write((char *)&size,sizeof(int));
+    for(const auto&block:blocksAccessible){
+        f.write((char *)&block,sizeof(Block));
+    }
+
+    size = solutions.size();
+    f.write((char *)&size,sizeof(int));
+    for(const auto&solution:solutions){
+        f.write((char *)&solution,sizeof(Solution));
+    }
+
+    size = linkLines.size();
+    f.write((char *)&size,sizeof(int));
+    for(const auto&linkLine:linkLines){
+        f.write((char *)&linkLine.blocksEliminated.first->code,sizeof(int));
+        f.write((char *)&linkLine.blocksEliminated.second->code,sizeof(int));
+        size = linkLine.turnPoints.size();
+        f.write((char *)&size,sizeof(int));
+        for(const auto&point:linkLine.turnPoints){
+            f.write((char *)&point,sizeof(Point));
+        }
+        f.write((char *)&linkLine.count,sizeof(int));
+    }
+
+
+    bool hintFlag = hint ? true:false;
+    f.write((char *)&hintFlag,sizeof(bool));
+    if(hintFlag){
+        f.write((char *)&*hint,sizeof(Hint));
+    }
+
+    size = Config::numberOfBlocksRow+2;
+    f.write((char *)&size,sizeof(int));
+    size = Config::numberOfBlocksColumn+2;
+    f.write((char *)&size,sizeof(int));
+    for(int i = 0 ; i < Config::numberOfBlocksRow+2 ; i++){
+        f.write((char *)map[i],sizeof(bool)*(Config::numberOfBlocksColumn+2));
+    }
+    f.close();
+}
+
+void Game::load(std::string path)
+{
+    std::ifstream f(path,std::ios::binary);
+
+    int size;
+
+    props.clear();
+    f.read((char *)&size,sizeof(int));
+    for(int i = 0 ;i < size ; i++){
+        Prop prop;
+        f.read((char *)&prop,sizeof(Prop));
+        props.push_back(std::move(prop));
+    }
+
+    blocks.clear();
+    f.read((char *)&size,sizeof(int));
+    for(int i = 0 ;i < size ; i++){
+        Block *block = new Block;
+        f.read((char *)block,sizeof(Block));
+        blocks.push_back(std::shared_ptr<Block>(std::move(block)));
+    }
+
+    players.clear();
+    f.read((char *)&size,sizeof(int));
+    int code;
+    for(int i = 0 ; i < size ; i++){
+        Player player;
+        f.read((char *)&player,sizeof(Player));
+        f.read((char *)&code,sizeof(int));
+        if(code){
+            player.setBlock(findBlockByCode(code));
+        }
+        players.push_back(std::move(player));
+    }
+
+    emptySpace.clear();
+    f.read((char *)&size,sizeof(int));
+    for(int i = 0 ; i < size ; i++){
+        Point point;
+        f.read((char *)&point,sizeof(Point));
+        emptySpace.insert(std::move(point));
+    }
+
+    blocksAccessible.clear();
+    f.read((char *)&size,sizeof(int));
+    for(int i = 0 ; i < size ; i++){
+        Block block;
+        f.read((char *)&block,sizeof(Block));
+        blocksAccessible.insert(std::move(block));
+    }
+
+    solutions.clear();
+    f.read((char *)&size,sizeof(int));
+    for(int i = 0 ; i < size ; i++){
+        Solution solution;
+        f.read((char *)&solution,sizeof(Solution));
+        solutions.insert(std::move(solution));
+    }
+
+    linkLines.clear();
+    f.read((char *)&size,sizeof(int));
+    int pointSize;
+    int code2;
+    for(int i = 0 ; i < size ; i++){
+        f.read((char *)&code,sizeof(int));
+        f.read((char *)&code2,sizeof(int));
+        std::vector<Point> turnPoints;
+        f.read((char *)&pointSize,sizeof(int));
+        for(int j = 0 ; j < pointSize ; j++){
+            Point point;
+            f.read((char *)&point,sizeof(Point));
+            turnPoints.push_back(std::move(point));
+        }
+        int count;
+        f.read((char *)&count,sizeof(int));
+        linkLines.push_back(LinkLine(findBlockByCode(code),findBlockByCode(code2),std::move(turnPoints),count));
+    }
+
+    bool hintFlag;
+    f.read((char *)&hintFlag,sizeof(bool));
+    if(hintFlag){
+        Hint *_hint = new Hint;
+        f.read((char *)_hint,sizeof(Hint));
+        hint.reset(_hint);
+    }
+
+    f.read((char *)&size,sizeof(int));
+    map = new bool*[size];
+    int n;
+    f.read((char *)&n,sizeof(int));
+    for(int i = 0 ; i < size ; i++){
+        map[i] = new bool[n];
+        f.read((char *)map[i],sizeof(bool)*n);
+    }
+
+
+    f.close();
+}

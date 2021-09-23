@@ -36,6 +36,7 @@ private:
     struct Point final{//用于判断空白位置 一个空白位置仅需要坐标 而不需要其他任何信息 如颜色、移动、绘制 故不继承Element
         int x;
         int y;
+        Point(){};
         Point(int xx,int yy):x(xx),y(yy){}
         Point(const Element &e):x(e.x),y(e.y){}
         bool operator < (const Point &b)const{
@@ -45,6 +46,7 @@ private:
     struct Solution final{
         Block block1;//hint需要高亮 故不存code  set需要自定义比较 故不存地址
         Block block2;
+        Solution(){};
         Solution(Block b1,Block b2):block1(b1),block2(b2){//必须用初始化列表 因为block没有默认构造函数
             if(block1.code > block2.code){
                 std::swap(block1,block2);
@@ -60,13 +62,14 @@ private:
         std::pair<std::shared_ptr<Block>,std::shared_ptr<Block>> blocksEliminated;//连接的线段需要的点 包括两个目标点与0-2个拐点
         std::vector<Point> turnPoints;//0 1 2
         int count;//每帧-1 到0后停直动画
-        LinkLine(std::shared_ptr<Block> block1,std::shared_ptr<Block> block2,std::vector<Point> tp):blocksEliminated(std::make_pair(block1,block2)),turnPoints(tp),count(0){}
+        LinkLine(std::shared_ptr<Block> block1,std::shared_ptr<Block> block2,std::vector<Point> tp,int c = 0):blocksEliminated(std::make_pair(block1,block2)),turnPoints(tp),count(c){}
     };
 
     struct Hint final{
         Solution solution;
         bool status;//每帧改变状态(画笔类型) 达到闪烁的效果
         int secondsRemain;
+        Hint(){};
         Hint(Solution s,int t):solution(s),status(true),secondsRemain(t){}
     };
     //根据设定 全局只有一个hint 且可能存在也可能不存在
@@ -99,6 +102,8 @@ protected:
     bool flashEnabled()const;
     bool hintDisplay()const;
     bool addTimeDisplay()const;
+
+    //为了使得游戏的长宽可变 这里使用动态二维数组 这导致了多次new的内存分配不一定连续 保存时不可保存连续的区域
     bool **map;//true->有block false ->无block 便于算法的判断  map[column][row]  [code/100][code%100]
     /*记录了空白位置中心点的坐标 改程序中 玩家、方块、道具均为正方形且大小相同 故以空白位置为中心生成的新对象一定不会和其他对象重合 若需要修改三种对象的大小 则此逻辑需要修改
        玩家、道具、方块均占用位置且只能生成在空白位置
@@ -195,6 +200,18 @@ public:
 
         void flash(int x,int y);//接受点击的坐标参数
         void move(int key);//接受按下的键盘参数
+
+        //所有元素的存储放在以下两个函数中进行，使用write read 二进制存储 原因如下
+        //1 使得存取完全在掌控之中 不会出现 存入两个int分别为1和2 读出一个int为12的情况
+        //2 由于使用不定长容器存储 故容器大小也是未知量 大块的数据其实是作为一个整体的  而基本元素也就是write一行语句的事
+
+        //read需要事先准备好已经分配好内存的地址，不论是在堆上还是栈上申请都需要默认构造函数
+        //write需要保证对象的内容无指针，且对象的长度(sizeof)固定 不然读的时候不好读
+        //如果有不确定的变量使得read困难 可以在write的时候统一先write size flag等
+
+
+        void save(std::string path);
+        void load(std::string path);
 
 };
 

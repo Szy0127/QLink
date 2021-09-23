@@ -103,6 +103,11 @@ void QLink::keyPressEvent(QKeyEvent *event)
             frameUpdateTimer->stop();
         }
         return;
+    case Qt::Key_V:
+        game->save("test");
+        return;
+    case Qt::Key_B:
+        game->load("test");
     }
     game->move(event->key());
 }
