@@ -1,14 +1,16 @@
 #include <memory>
 #include "Element.h"
-
+#include <iostream>
+#include <QFile>
+#include <fstream>
 const int Element::stepx = 65;
 const int Element::stepy = 65;
 const int Block::width = Element::stepx;
 const int Block::height = Element::stepy;
 const int Block::penWidth = 4;
-const int Block::type = 6;
+const int Block::typeAmount = 6;
 const int Block::eliminateTag = 0b1000;
-const QColor Block::BlockColor[Block::type]= {QColor(50,100,200),QColor(100,100,100),QColor(100,50,100),QColor(50,0,200),QColor(50,200,0),QColor(200,100,20)};
+const QColor Block::BlockColor[Block::typeAmount]= {QColor(50,100,200),QColor(100,100,100),QColor(100,50,100),QColor(50,0,200),QColor(50,200,0),QColor(200,100,20)};
 const QColor Player::playerColor[2]= {QColor(255,50,50),QColor(50,50,200)};
 const int Player::width = Element::stepx;
 const int Player::height = Element::stepy;
@@ -28,6 +30,12 @@ void Element::move(int dx,int dy)//-1 0 1
     x += dx * stepx;
     y += dy * stepy;
 }
+Block::Block(int ix,int iy,int t,int c):Element(ix,iy),type(t),status(0),code(c)
+{
+    QString path(QString::number(type)+".png");
+    image.load(path);
+    image = image.scaledToWidth(Block::width).scaledToHeight(Block::height);
+}
 void Block::draw(QPainter &painter)const
 {
     QPen pen;
@@ -40,13 +48,17 @@ void Block::draw(QPainter &painter)const
 
     pen.setWidth(penWidth);
     pen.setStyle(Qt::SolidLine);
-    QBrush brush;
-    brush.setColor(color);
-    brush.setStyle(Qt::SolidPattern);
+//    QBrush brush;
+//    brush.setColor(BlockColor[type]);
+//    brush.setStyle(Qt::SolidPattern);
+//    painter.setPen(pen);
+//    painter.setBrush(brush);
+    painter.setBrush(Qt::NoBrush);
     painter.setPen(pen);
-    painter.setBrush(brush);
-    //painter.setBrush(Qt::NoBrush);
+    painter.drawImage(x,y,image);
     painter.drawRect(x,y,width,height);//x y 是左上角
+
+
 }
 
 void Block::setEliminate(){

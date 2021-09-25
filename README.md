@@ -1,11 +1,18 @@
 SJTU_SEP    
 9/19完成 剥离出游戏本身的数据结构和算法 重新设计Game类 单例 调整接口 私有的放入private  QLink类只保留paint、mouse、keyEvent 一个game的实例   
-9/29 由下至上重载每一个class/struct的输入输出函数 (不涉及stl) 并增加无参数的构造函数(仅初始化使用)  
-     存档时ofstream<<object 读档时 Object object;ifstream>>object;      
-	   所有涉及到指针的object 均存*object  
-9/30调整暂停的算法     
+9/22完成 保存  全用二进制
+9/25完成 block的纯色背景改成图片 自定义图片方法：
+1 找到图片  
+2 用ps右键图层 右下角倒数第四个圆的 选纯色 这里使用97d9f1 调整图层顺序 魔法笔删除原图层中空白部分
+3 图像 大小 暂时设置为65x65
+4 导出路径为工作目录
+5 代码中 QImage对象 构造函数为path paintImage方法参数为x y image  
+9/26 道具image   
+9/27 暂停    
 10/2 增加开始、结束界面    
 10/3 看一下设置的step width 是否可改动   
 10/4 代码结构 遗留问题   
 10/5 通过测试点   
 10/6 bug      
+
+保存时需要的Config中的变量是否要存 二者的关系 需要进一步思考

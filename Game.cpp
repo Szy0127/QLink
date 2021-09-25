@@ -433,8 +433,8 @@ void Game::createBlocks()
 {
     srand(time(0));
     map = new bool*[Config::numberOfBlocksRow+2];
-    int *count = new int[Block::type]();//加括号会初始化为0
-    int max = Config::numberOfBlocksRow * Config::numberOfBlocksColumn / Block::type;
+    int *count = new int[Block::typeAmount]();//加括号会初始化为0
+    int max = Config::numberOfBlocksRow * Config::numberOfBlocksColumn / Block::typeAmount;
     for(int i = 0 ; i <= Config::numberOfBlocksRow + 1 ; i++){//从1开始 0表示紧挨着的白色方格 判断时有用
         map[i] = new bool[Config::numberOfBlocksColumn+2];
         for(int j = 0 ; j <= Config::numberOfBlocksColumn + 1 ;j++){
@@ -442,14 +442,14 @@ void Game::createBlocks()
                 bool valid = false;
                 int r;
                 while(!valid){
-                    r = rand()%Block::type;
+                    r = rand()%Block::typeAmount;
                     if(++count[r]<=max){//改这里可以测试无解
                         valid = true;
                     }
                 }
                 int code = i*100+j;
                 //当指向该内存的最后一个指针被销毁时 调用第二个参数(deleter) 自动释放内存
-                std::shared_ptr<Block> block(new Block(xbegin+(i-1)*Block::width,ybegin+(j-1)*Block::height,Block::BlockColor[r],code));
+                std::shared_ptr<Block> block(new Block(xbegin+(i-1)*Block::width,ybegin+(j-1)*Block::height,r,code));
                                              //,[](Block *b){std::cout<<"delete"<<b->code<<std::endl;delete b;});
 
                 blocks.push_back(block);//这里用move会崩溃
@@ -512,7 +512,7 @@ std::shared_ptr<Block> Game::findBlockByCode(int code)const
             return block;
         }
     }
-    return std::shared_ptr<Block>(new Block(xbegin+(code/100-1)*Block::width,ybegin+(code%100-1)*Block::height,Block::BlockColor[0],-1));
+    return std::shared_ptr<Block>(new Block(xbegin+(code/100-1)*Block::width,ybegin+(code%100-1)*Block::height,0,-1));
     //return nullptr;
 }
 
@@ -594,7 +594,7 @@ bool Game::link(const Block &block1,const Block &block2)
     if(block1.code == block2.code){
         return false;
     }
-    if(block1.color != block2.color){
+    if(block1.type != block2.type){
         return false;
     }
 
@@ -659,7 +659,7 @@ std::vector<Game::Point> Game::getTurnPoints(Block &block1, Block &block2)
                 }
             }
         }else{//作为拐点 必为空白(周围一圈或被消除的block) 不存在于blocks中 但为了统一类型 生成一个暂时的新的block作为绘制line使用 绘制完delete
-            turnPoints.push_back(*(findBlockByCode(*setC.begin())));
+            turnPoints.push_back(Point(*(findBlockByCode(*setC.begin()))));
         }
     }
     return turnPoints;
@@ -727,7 +727,8 @@ void Game::shuffleStart()
         for(auto &block2:blocks){
             int flag = rand() % blocks.size();
             if(flag == 0 && !block1->isEliminated() && !block2->isEliminated()){//不交换
-                std::swap(block1->color,block2->color);
+                std::swap(block1->type,block2->type);
+                std::swap(block1->image,block2->image);
             }
         }
     }

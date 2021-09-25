@@ -13,7 +13,7 @@ class Element
     static const int stepx;
     static const int stepy;
     Element(){};
-    Element(int ix,int iy,QColor ic):x(ix),y(iy),color(ic){}// x y 为具体坐标
+    Element(int ix,int iy,QColor ic = QColor(0,0,0)):x(ix),y(iy),color(ic){}// x y 为具体坐标
     QWidget *parent;
     int x;//由于Qt 的paint函数是根据左上角坐标绘制 所以这里存储的xy也是左上角坐标
     int y;
@@ -61,7 +61,7 @@ public:
     static const int height;
     static const int penWidth;
     static const QColor BlockColor[6];
-    static const int type;
+    static const int typeAmount;
     static const int eliminateTag;
     /* 0-初始 1-player1选中 2-player2 用于绘制不同颜色的边框
      当玩家成功连接两个block时 这两个block不能立即删除 需要完成动画 同时不能被其他玩家再选中
@@ -72,10 +72,13 @@ public:
      */
 private:
     int status;
+
 public:
     int code;
+    int type;//0~typeAmount-1
+    QImage image;//如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
     Block(){};
-    Block(int ix,int iy,QColor ic,int c):Element(ix,iy,ic),status(0),code(c){}
+    Block(int ix,int iy,int t,int c);
     virtual void draw(QPainter &painter)const override;
     bool operator <(const Block &b)const{ // set
         return code < b.code;
