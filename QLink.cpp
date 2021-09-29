@@ -16,17 +16,21 @@
 #define millisecond 1000
 
 
-QLink::QLink(QWidget *parent,std::string configPath)
-    : QWidget(parent),path("test")
+QLink::QLink(QWidget *parent,std::string gameFilePath)
+    : QWidget(parent)
 {
 
-    Config::load(configPath);
     // 设置窗口的标题
     setWindowTitle(tr("QLink"));
     // 设置 widget 大小
     resize(Config::width, Config::height);
 
-    game = new Game;
+    if(gameFilePath.empty()){
+        game = new Game;
+    }else{
+        game = new Game(gameFilePath);
+    }
+
     initTimer();
 
 }
@@ -88,26 +92,19 @@ void QLink::mousePressEvent(QMouseEvent *event)
 }
 void QLink::keyPressEvent(QKeyEvent *event)
 {
-    if(game->gameover || game->stop){
+    if(game->gameover){
         return;
     }
 
-
     switch (event->key()){
     case Qt::Key_P:
-        if(game->stop){
-            game->stop = false;
-            frameUpdateTimer->start(1000/Config::fps);
-        }else{
-            game->stop = true;
-            frameUpdateTimer->stop();
-        }
+        game->pause();
         return;
     case Qt::Key_V:
-        game->save("test");
+        game->save("test1");
         return;
     case Qt::Key_B:
-        game->load("test");
+        game->load("test1");
     }
     game->move(event->key());
 }

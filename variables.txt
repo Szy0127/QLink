@@ -1,10 +1,10 @@
 
-**    std::list<LinkLine> linkLines;
+ √   std::list<LinkLine> linkLines;
 
-    int animationRemain[Prop::animationAmount];
-    bool singlePlayer;
+  √   int animationRemain[Prop::animationAmount];
+  √   bool singlePlayer;
 
-    int timeRemain; 
+ √   int timeRemain; 
     bool stop;
 √    bool **map;
 

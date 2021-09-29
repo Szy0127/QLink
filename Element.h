@@ -56,6 +56,7 @@ public:
 
 class Block final:public Element
 {
+    friend void swapBlocks(Block &block1,Block &block2);
 public:
     static const int width;
     static const int height;
@@ -76,7 +77,8 @@ private:
 public:
     int code;
     int type;//0~typeAmount-1
-    QImage image;//如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
+    //如果不用指针 会导致使用二进制整体存储block的时候报错
+    QImage *image;//如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
     Block(){};
     Block(int ix,int iy,int t,int c);
     virtual void draw(QPainter &painter)const override;
@@ -96,6 +98,7 @@ public:
     int getPlayerIndex()const;//玩家1 2 3 4  对应players[0] [1] [2] [3]    0表示未被选中
     void setUnchosen();//消除后无法被选中 故能被选中的block一定状态是0 直接赋值即可
     void setChosen(int playerID);
+    void getImage();
 
 };
 

@@ -30,11 +30,20 @@ void Element::move(int dx,int dy)//-1 0 1
     x += dx * stepx;
     y += dy * stepy;
 }
+void swapBlocks(Block &block1,Block &block2){
+    std::swap(block1.type,block2.type);
+    std::swap(block1.image,block2.image);
+
+}
 Block::Block(int ix,int iy,int t,int c):Element(ix,iy),type(t),status(0),code(c)
 {
+    getImage();
+}
+void Block::getImage()
+{
     QString path(QString::number(type)+".png");
-    image.load(path);
-    image = image.scaledToWidth(Block::width).scaledToHeight(Block::height);
+    image = new QImage(path);
+    *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
 }
 void Block::draw(QPainter &painter)const
 {
@@ -55,7 +64,7 @@ void Block::draw(QPainter &painter)const
 //    painter.setBrush(brush);
     painter.setBrush(Qt::NoBrush);
     painter.setPen(pen);
-    painter.drawImage(x,y,image);
+    painter.drawImage(x,y,*image);
     painter.drawRect(x,y,width,height);//x y 是左上角
 
 

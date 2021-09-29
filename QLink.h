@@ -16,13 +16,12 @@ class QLink : public QWidget
 
 public:
     // 屏幕宽高  方块个数宽高 游戏结束时间 玩家数
-    QLink(QWidget *parent = nullptr,std::string configPath = "./config.config");
+    QLink(QWidget *parent = nullptr,std::string gameFilePath = "");
     ~QLink();
 
 
 protected:
 
-    std::string path;
     Game *game;//若不设置为指针 game必须在QLink的构造函数的初始化列表中进行初始化 否则会自动进行 导致无法进行Config.load操作
 
     QTimer *frameUpdateTimer;

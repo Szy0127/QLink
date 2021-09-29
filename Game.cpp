@@ -24,8 +24,9 @@ const QColor Game::hintColor = QColor(255,255,0);
 Game::Game()
     : hint(nullptr),animationRemain{},propCount(0),timeRemain(Config::timeLimitation)
 {
+    Config::load(Config::defaultPath);
     gameover = false;
-    stop = false;
+    isPaused = false;
     //Config::load(configPath);
     // 设置窗口的标题
 //    setWindowTitle(tr("QLink"));
@@ -39,6 +40,11 @@ Game::Game()
     findSolutions();
     findEmptySpace();
     createPlayers();
+}
+Game::Game(std::string gameFilePath)
+{
+    initData();
+    load(gameFilePath);
 }
 
 void Game::initData()
@@ -84,6 +90,9 @@ void Game::initData()
 
 void Game::updateStatus()
 {
+    if(isPaused){
+        return;
+    }
     propCount++;
     if(propCount == Config::propFrequency){
         createOneProp();
@@ -186,7 +195,7 @@ void Game::drawTexts(QPainter &painter)
             painter.drawText(150,30+40*(i+1),QString::number(players[i].getScore()));
         }
     }
-    painter.drawText(100,90,QString::number(solutions.size()));
+//    painter.drawText(100,90,QString::number(solutions.size()));
 
 
     if(gameover){
@@ -727,8 +736,7 @@ void Game::shuffleStart()
         for(auto &block2:blocks){
             int flag = rand() % blocks.size();
             if(flag == 0 && !block1->isEliminated() && !block2->isEliminated()){//不交换
-                std::swap(block1->type,block2->type);
-                std::swap(block1->image,block2->image);
+                swapBlocks(*block1,*block2);
             }
         }
     }
@@ -787,6 +795,9 @@ void Game::dizzyStart(Player &player)
 
 void Game::flash(int x, int y)
 {
+    if(isPaused){
+        return;
+    }
     if(!flashEnabled()){
         return;
     }
@@ -802,6 +813,9 @@ void Game::flash(int x, int y)
 }
 void Game::move(int key)
 {
+    if(isPaused){
+        return;
+    }
     if(!keyToDirection.count(key)){
         return;
     }
@@ -819,6 +833,7 @@ void Game::move(int key)
 
 void Game::save(std::string path)
 {
+    Config::save(path+".config");
     std::ofstream f(path,std::ios::binary);
 
     int size = props.size();
@@ -830,7 +845,9 @@ void Game::save(std::string path)
     size = blocks.size();
     f.write((char *)&size,sizeof(int));
     for(const auto&block:blocks){
+        block->image = nullptr;
         f.write((char *)&*block,sizeof(Block));
+        block->getImage();
     }
 
     size = players.size();
@@ -884,18 +901,26 @@ void Game::save(std::string path)
         f.write((char *)&*hint,sizeof(Hint));
     }
 
-    size = Config::numberOfBlocksRow+2;
-    f.write((char *)&size,sizeof(int));
-    size = Config::numberOfBlocksColumn+2;
-    f.write((char *)&size,sizeof(int));
+//    size = Config::numberOfBlocksRow+2;
+//    f.write((char *)&size,sizeof(int));
+//    size = Config::numberOfBlocksColumn+2;
+//    f.write((char *)&size,sizeof(int));
     for(int i = 0 ; i < Config::numberOfBlocksRow+2 ; i++){
         f.write((char *)map[i],sizeof(bool)*(Config::numberOfBlocksColumn+2));
     }
+
+    for(int i = 0 ; i < Prop::animationAmount ; i++){
+        f.write((char *)(animationRemain+i),sizeof(int));
+    }
+
+    f.write((char *)&timeRemain,sizeof(int));
+    f.write((char *)&singlePlayer,sizeof(bool));
     f.close();
 }
 
 void Game::load(std::string path)
 {
+    Config::load(path+".config");
     std::ifstream f(path,std::ios::binary);
 
     int size;
@@ -913,6 +938,7 @@ void Game::load(std::string path)
     for(int i = 0 ;i < size ; i++){
         Block *block = new Block;
         f.read((char *)block,sizeof(Block));
+        block->getImage();
         blocks.push_back(std::shared_ptr<Block>(std::move(block)));
     }
 
@@ -980,15 +1006,25 @@ void Game::load(std::string path)
         hint.reset(_hint);
     }
 
-    f.read((char *)&size,sizeof(int));
-    map = new bool*[size];
-    int n;
-    f.read((char *)&n,sizeof(int));
-    for(int i = 0 ; i < size ; i++){
-        map[i] = new bool[n];
-        f.read((char *)map[i],sizeof(bool)*n);
+    //f.read((char *)&size,sizeof(int));
+    map = new bool*[Config::numberOfBlocksRow+2];//这里会有内存泄露的问题
+//    int n;
+    //f.read((char *)&n,sizeof(int));
+    for(int i = 0 ; i < Config::numberOfBlocksRow+2 ; i++){
+        map[i] = new bool[Config::numberOfBlocksColumn+2];
+        f.read((char *)map[i],sizeof(bool)*(Config::numberOfBlocksColumn+2));
     }
 
+    for(int i = 0 ; i < Prop::animationAmount ; i++){
+        f.read((char *)(animationRemain+i),sizeof(int));
+    }
+
+    f.read((char *)&timeRemain,sizeof(int));
+    f.read((char *)&singlePlayer,sizeof(bool));
 
     f.close();
+}
+void Game::pause()
+{
+    isPaused = !isPaused;
 }

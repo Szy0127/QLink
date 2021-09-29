@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 //#include <iostream>
+
+std::string Config::defaultPath = "./default.config";
 int Config::width = 1600;
 int Config::height = 900;
 int Config::numberOfBlocksRow = 16;
@@ -15,6 +17,12 @@ int Config::dizzyDuration = 10;
 int Config::animationDuration = 1;
 int Config::fps = 24;
 int Config::flashDuration = 5;
+
+int Config::menuWidth = 800;
+int Config::menuHeight = 600;
+int Config::menuButtonWidth = 200;
+int Config::menuButtonHeight = 50;
+QFont Config::menuButtonFont = QFont("宋体",20);
 
 void Config::load(std::string path)
 {
@@ -85,7 +93,21 @@ void Config::load(std::string path)
         }
     }
 }
+
 void Config::save(std::string path)
 {
-
+    std::ofstream f(path);
+    f<<"width "<<width<<std::endl;
+    f<<"height "<<height<<std::endl;
+    f<<"numberOfBlocksRow "<<numberOfBlocksRow<<std::endl;
+    f<<"numberOfBlocksColumn "<<numberOfBlocksColumn<<std::endl;
+    f<<"timeLimitation "<<timeLimitation<<std::endl;
+    f<<"propFrequency "<<propFrequency<<std::endl;
+    f<<"playerNumber "<<playerNumber<<std::endl;
+    f<<"hintDuration "<<hintDuration<<std::endl;
+    f<<"freezeDuration "<<freezeDuration<<std::endl;
+    f<<"dizzyDuration "<<dizzyDuration<<std::endl;
+    f<<"animationDuration "<<animationDuration<<std::endl;
+    f<<"fps "<<fps<<std::endl;
+    f<<"flashDuration "<<flashDuration<<std::endl;
 }

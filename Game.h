@@ -15,6 +15,7 @@ class Game
     static const QColor hintColor;
 public:
     // 屏幕宽高  方块个数宽高 游戏结束时间 玩家数
+    Game(std::string gameFilePath);
     Game();
     //~Game();
 
@@ -186,7 +187,7 @@ protected:
 //    void mousePressEvent(QMouseEvent *event) override;
 
 public:
-        bool stop;
+        bool isPaused;
         bool gameover;
 
 
@@ -214,6 +215,7 @@ public:
 
         void save(std::string path);
         void load(std::string path);
+        void pause();
 
 };
 
