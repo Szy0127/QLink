@@ -10,7 +10,10 @@ class Config final
 
 
 public:
-    static std::string defaultPath;
+    static std::string configPath;
+    static std::string archiveFilePath;
+    static std::string archiveImagePath;
+    static std::string imagePath;
     static int fps;
     static int width;
     static int height;
@@ -36,6 +39,7 @@ public:
     static int menuButtonHeight;
 
     static QFont menuButtonFont;
+
     static void load(std::string path);
     static void save(std::string path);
 };

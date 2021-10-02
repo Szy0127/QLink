@@ -12,12 +12,13 @@
 #include <algorithm>
 #include <memory>
 #include <fstream>
+#include <QMessageBox>
 
 #define millisecond 1000
 
 
-QLink::QLink(QWidget *parent,std::string gameFilePath)
-    : QWidget(parent)
+QLink::QLink(QWidget *parent,QWidget *menu,std::string gameFilePath)
+    : QWidget(parent),menu(menu),questioned(false)
 {
 
     // 设置窗口的标题
@@ -44,6 +45,9 @@ QLink::~QLink()
 void QLink::updateStatus()
 {
     game->updateStatus();
+    if(game->gameover){
+        gameover();
+    }
 }
 void QLink::initTimer()
 {
@@ -99,13 +103,53 @@ void QLink::keyPressEvent(QKeyEvent *event)
     switch (event->key()){
     case Qt::Key_P:
         game->pause();
+        if(game->isPaused){
+            QMessageBox messageBox(QMessageBox::NoIcon,"暂停", "是否存档？",QMessageBox::Yes | QMessageBox::No, this);
+            int result = messageBox.exec();
+            if(result == QMessageBox::Yes){
+                save();
+            }
+        }
         return;
-    case Qt::Key_V:
-        game->save("test1");
-        return;
-    case Qt::Key_B:
-        game->load("test1");
     }
     game->move(event->key());
 }
+void QLink::save()
+{
+    QPixmap p = grab(QRect(0,0,Config::width,Config::height));
+    QString filePathName(QString::fromStdString(Config::archiveImagePath));
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh-mm-ss-zzz");
+    filePathName += time;
+    filePathName += ".png";
+    if(p.save(filePathName,"png")){
+        game->save(time.toStdString());
+        QMessageBox::information(this, "提示", "保存成功！");
+    }else{
+        QMessageBox::information(this, "提示", "保存失败！请检查存档目录是否被修改！");
+    }
+}
+void QLink::gameover()
+{
+    if(questioned){
+        return;
+    }
+    questioned = true;
+    QMessageBox messageBox(QMessageBox::NoIcon,"游戏结束", "游戏结束，是否回到菜单？",QMessageBox::Yes | QMessageBox::No, this);
+    int result = messageBox.exec();
+    if(result == QMessageBox::Yes){
+        if(menu){
+            menu->show();
+        }
+        hide();//如果这里用exit menu会闪一下然后一起退出 因为使用了hide 所以需要在menu里delete
+    }
+}
 
+void QLink::closeEvent(QCloseEvent *event)
+{
+    event->ignore();
+    QMessageBox messageBox(QMessageBox::NoIcon,"退出", "是否直接退出？(存档请在游戏界面按P)",QMessageBox::Yes | QMessageBox::No, this);
+    int result = messageBox.exec();
+    if(result == QMessageBox::Yes){
+        event->accept();
+    }
+}

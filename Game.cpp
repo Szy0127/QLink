@@ -15,6 +15,7 @@
 #include <memory>
 #include <fstream>
 
+
 #define millisecond 1000
 
 
@@ -22,9 +23,10 @@ const QColor Game::linkLineColor = QColor(255,0,0);
 const QColor Game::hintColor = QColor(255,255,0);
 
 Game::Game()
-    : hint(nullptr),animationRemain{},propCount(0),timeRemain(Config::timeLimitation)
+    : hint(nullptr),animationRemain{},propCount(0)
 {
-    Config::load(Config::defaultPath);
+    Config::load(Config::configPath);
+    timeRemain = Config::timeLimitation;
     gameover = false;
     isPaused = false;
     //Config::load(configPath);
@@ -45,6 +47,7 @@ Game::Game(std::string gameFilePath)
 {
     initData();
     load(gameFilePath);
+    singlePlayer = Config::playerNumber == 1;
 }
 
 void Game::initData()
@@ -123,6 +126,9 @@ void Game::updateStatus()
     if(solutions.empty()){//判断暂时放在这里
         gameover = true;
     }
+    if(gameover){
+        isPaused = true;
+    }
 }
 void Game::drawPlayers(QPainter &painter)
 {
@@ -200,7 +206,7 @@ void Game::drawTexts(QPainter &painter)
 
     if(gameover){
         painter.setPen(Qt::red);
-        painter.drawText(500,500,QString("GameOver"));
+        painter.drawText(300,100,QString("GameOver"));
     }
 }
 void Game::drawLinkLines(QPainter &painter)//绘制完成后直接在此函数中删除对应的block
@@ -232,6 +238,9 @@ void Game::drawLinkLines(QPainter &painter)//绘制完成后直接在此函数�
         }
 
 
+        if(isPaused){//暂停时始终保持动画存在 可改
+            return;
+        }
         lineIterator->count++;//到0后停止动画 删除砖块
         if(lineIterator->count == Config::animationDuration * Config::fps){
             removeTwoBlocks(lineIterator->blocksEliminated.first,lineIterator->blocksEliminated.second);
@@ -831,9 +840,10 @@ void Game::move(int key)
     }
 }
 
-void Game::save(std::string path)
+void Game::save(std::string fileName)
 {
-    Config::save(path+".config");
+    std::string path = Config::archiveFilePath + fileName;
+    Config::save(path+".conf");
     std::ofstream f(path,std::ios::binary);
 
     int size = props.size();
@@ -918,9 +928,10 @@ void Game::save(std::string path)
     f.close();
 }
 
-void Game::load(std::string path)
+void Game::load(std::string fileName)
 {
-    Config::load(path+".config");
+    std::string path = Config::archiveFilePath + fileName;
+    Config::load(path+".conf");
     std::ifstream f(path,std::ios::binary);
 
     int size;
@@ -1006,8 +1017,8 @@ void Game::load(std::string path)
         hint.reset(_hint);
     }
 
-    //f.read((char *)&size,sizeof(int));
-    map = new bool*[Config::numberOfBlocksRow+2];//这里会有内存泄露的问题
+
+    map = new bool*[Config::numberOfBlocksRow+2];//如果load在游戏中调用 map会内存泄漏 但实际上设计了load只能在构造函数中调用
 //    int n;
     //f.read((char *)&n,sizeof(int));
     for(int i = 0 ; i < Config::numberOfBlocksRow+2 ; i++){

@@ -2,8 +2,10 @@
 #include "Config.h"
 #include "QLink.h"
 
+#include <QFileDialog>
+#include <QMessageBox>
 #include <iostream>
-Menu::Menu(QWidget *parent):QWidget(parent)
+Menu::Menu(QWidget *parent):QWidget(parent),qlink(nullptr)
 {
     setWindowTitle(tr("QLinkMenu"));
     // 设置 widget 大小
@@ -39,13 +41,31 @@ Menu::~Menu()
 
 void Menu::start()
 {
-    qlink = new QLink(nullptr);
+    if(qlink){
+        delete qlink;
+    }
+    qlink = new QLink(nullptr,this);
     qlink->show();
     hide();
+    //connet(qlink,&QWidget::closeEvent,)
 }
 void Menu::load()
 {
-    qlink = new QLink(nullptr,"test1");
+    if(qlink){
+        delete qlink;
+    }
+
+    //绝对路径转成相对路径后去掉后缀 只保留文件名(时间)
+    QString filePath = QFileDialog::getOpenFileName(this,"选择存档截图",QString::fromStdString(Config::archiveImagePath),"Image Files(*.png)");
+    int first = filePath.indexOf(QString::fromStdString(Config::archiveImagePath));
+    filePath = filePath.mid(first+Config::archiveImagePath.length()).remove(".png");
+    QFileInfo file(QString::fromStdString(Config::archiveFilePath) + filePath);
+    QFileInfo file2(QString::fromStdString(Config::archiveFilePath) + filePath + ".conf");
+    if(!file.exists() | !file2.exists()){
+        QMessageBox::information(this, "错误", "未发现相应存档，请检查文件名");
+        return;
+    }
+    qlink = new QLink(nullptr,this,filePath.toStdString());
     qlink->show();
     hide();
 }
@@ -54,4 +74,5 @@ void Menu::quit()
 
     exit(0);
 }
+
 

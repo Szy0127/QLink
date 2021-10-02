@@ -1,5 +1,6 @@
 #include <memory>
 #include "Element.h"
+#include <Config.h>
 #include <iostream>
 #include <QFile>
 #include <fstream>
@@ -41,7 +42,7 @@ Block::Block(int ix,int iy,int t,int c):Element(ix,iy),type(t),status(0),code(c)
 }
 void Block::getImage()
 {
-    QString path(QString::number(type)+".png");
+    QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+".png");
     image = new QImage(path);
     *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
 }

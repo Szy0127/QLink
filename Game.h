@@ -213,8 +213,8 @@ public:
         //如果有不确定的变量使得read困难 可以在write的时候统一先write size flag等
 
 
-        void save(std::string path);
-        void load(std::string path);
+        void save(std::string fileName);
+        void load(std::string fileName);
         void pause();
 
 };

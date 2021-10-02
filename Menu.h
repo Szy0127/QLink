@@ -17,6 +17,7 @@ public:
     void start();
     void load();
     void quit();
+
 };
 
 #endif // MENU_H

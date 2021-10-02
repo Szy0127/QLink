@@ -1,9 +1,13 @@
 #include "Config.h"
 #include <fstream>
 #include <sstream>
-//#include <iostream>
+#include <iostream>
 
-std::string Config::defaultPath = "./default.config";
+std::string Config::configPath = "default.conf";
+std::string Config::archiveImagePath = "archive/";
+std::string Config::archiveFilePath = "archive/file/";
+std::string Config::imagePath = "images/";
+
 int Config::width = 1600;
 int Config::height = 900;
 int Config::numberOfBlocksRow = 16;
