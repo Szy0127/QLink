@@ -23,7 +23,7 @@ const QColor Game::linkLineColor = QColor(255,0,0);
 const QColor Game::hintColor = QColor(255,255,0);
 
 Game::Game()
-    : hint(nullptr),animationRemain{},propCount(0)
+    : animationRemain{},propCount(0),map(nullptr),hint(nullptr)
 {
     Config::load(Config::configPath);
     timeRemain = Config::timeLimitation;
@@ -43,7 +43,7 @@ Game::Game()
     findEmptySpace();
     createPlayers();
 }
-Game::Game(std::string gameFilePath)
+Game::Game(std::string gameFilePath):animationRemain{},propCount(0),map(nullptr),hint(nullptr)
 {
     initData();
     load(gameFilePath);
@@ -923,6 +923,7 @@ void Game::save(std::string fileName)
         f.write((char *)(animationRemain+i),sizeof(int));
     }
 
+    f.write((char *)&propCount,sizeof(int));
     f.write((char *)&timeRemain,sizeof(int));
     f.write((char *)&singlePlayer,sizeof(bool));
     f.close();
@@ -930,7 +931,11 @@ void Game::save(std::string fileName)
 
 void Game::load(std::string fileName)
 {
+    //load只在构造函数中调用 所以下面所有的clear和delete理论上都没有用 但是为了安全还是加上了
     std::string path = Config::archiveFilePath + fileName;
+
+    int lastn = Config::numberOfBlocksRow+2;//为了delete map
+
     Config::load(path+".conf");
     std::ifstream f(path,std::ios::binary);
 
@@ -1018,9 +1023,14 @@ void Game::load(std::string fileName)
     }
 
 
-    map = new bool*[Config::numberOfBlocksRow+2];//如果load在游戏中调用 map会内存泄漏 但实际上设计了load只能在构造函数中调用
-//    int n;
-    //f.read((char *)&n,sizeof(int));
+    if(map){
+        for(int i = 0 ; i < lastn ; i++){
+            delete[] map[i];
+        }
+        delete[] map;
+    }
+    map = new bool*[Config::numberOfBlocksRow+2];
+
     for(int i = 0 ; i < Config::numberOfBlocksRow+2 ; i++){
         map[i] = new bool[Config::numberOfBlocksColumn+2];
         f.read((char *)map[i],sizeof(bool)*(Config::numberOfBlocksColumn+2));
@@ -1030,6 +1040,7 @@ void Game::load(std::string fileName)
         f.read((char *)(animationRemain+i),sizeof(int));
     }
 
+    f.read((char *)&propCount,sizeof(int));
     f.read((char *)&timeRemain,sizeof(int));
     f.read((char *)&singlePlayer,sizeof(bool));
 
