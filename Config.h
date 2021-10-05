@@ -40,6 +40,12 @@ public:
 
     static QFont menuButtonFont;
 
+    static int settingWidth;
+    static int settingHeight;
+
+    static int gameoverID;
+    static int settingSubmitID;
+
     static void load(std::string path);
     static void save(std::string path);
 };

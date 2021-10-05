@@ -24,7 +24,7 @@ QLink::QLink(QWidget *parent,QWidget *menu,std::string gameFilePath)
     // 设置窗口的标题
     setWindowTitle(tr("QLink"));
     // 设置 widget 大小
-    resize(Config::width, Config::height);
+    setFixedSize(Config::width, Config::height);
 
     if(gameFilePath.empty()){
         game = new Game;
@@ -137,10 +137,12 @@ void QLink::gameover()
     QMessageBox messageBox(QMessageBox::NoIcon,"游戏结束", "游戏结束，是否回到菜单？",QMessageBox::Yes | QMessageBox::No, this);
     int result = messageBox.exec();
     if(result == QMessageBox::Yes){
-        if(menu){
-            menu->show();
-        }
-        hide();//如果这里用exit menu会闪一下然后一起退出 因为使用了hide 所以需要在menu里delete
+//        if(menu){
+//            menu->show();
+//        }
+//        hide();//如果这里用exit menu会闪一下然后一起退出 因为使用了hide 所以需要在menu里delete
+        //close();
+        Config::gameoverID = menu->startTimer(0);
     }
 }
 
@@ -150,6 +152,7 @@ void QLink::closeEvent(QCloseEvent *event)
     QMessageBox messageBox(QMessageBox::NoIcon,"退出", "是否直接退出？(存档请在游戏界面按P)",QMessageBox::Yes | QMessageBox::No, this);
     int result = messageBox.exec();
     if(result == QMessageBox::Yes){
-        event->accept();
+        Config::gameoverID = menu->startTimer(0);
+        //event->accept() = exit(0) 会连主程序一起退出 所以这里回到主菜单
     }
 }

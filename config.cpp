@@ -28,6 +28,13 @@ int Config::menuButtonWidth = 200;
 int Config::menuButtonHeight = 50;
 QFont Config::menuButtonFont = QFont("宋体",20);
 
+
+int Config::settingWidth = 600;
+int Config::settingHeight = 400;
+
+int Config::gameoverID = -1;
+int Config::settingSubmitID = -1;
+
 void Config::load(std::string path)
 {
     std::ifstream file(path);

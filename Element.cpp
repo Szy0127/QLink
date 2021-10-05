@@ -22,6 +22,8 @@ const int Prop::height = Element::stepy;
 
 const char Prop::character[7] = "AFHSFD";//与Prop::enum顺序一致
 
+Element::~Element(){}
+
 bool collide(const Element &a,const Element &b)
 {
     return a.x == b.x && a.y == b.y;//游戏界面以正方形方块为一个单位 不会出现重合部分的情况
@@ -88,7 +90,7 @@ void Block::setChosen(int playerID)
 {
     status = playerID;
 }
-
+Block::~Block(){}
 Player::Player(int ix,int iy,QColor ic,int i):Element(ix,iy,ic),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i){}
 void Player::draw(QPainter &painter)const
 {
@@ -177,6 +179,7 @@ void Player::updateDizzy()
     }
     dizzySecondsRemain--;
 }
+Player::~Player(){}
 void Prop::draw(QPainter &painter)const
 {
     painter.setPen(Qt::NoPen);
@@ -188,3 +191,4 @@ void Prop::draw(QPainter &painter)const
     painter.setPen(Qt::red);
     painter.drawText(x + width/2 - fontSize/2, y + height/2 + fontSize/2,QString(Prop::character[type]));
 }
+Prop::~Prop(){}

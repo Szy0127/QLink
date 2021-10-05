@@ -4,11 +4,13 @@ HEADERS       = QLink.h \
     Config.h \
     Element.h \
     Game.h \
-    Menu.h
+    Menu.h \
+    Setting.h
 SOURCES       = QLink.cpp \
                 Element.cpp \
                 Game.cpp \
                 Menu.cpp \
+                Setting.cpp \
                 config.cpp \
                 main.cpp
 

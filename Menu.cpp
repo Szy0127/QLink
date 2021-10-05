@@ -1,16 +1,18 @@
 #include "Menu.h"
 #include "Config.h"
 #include "QLink.h"
+#include "Setting.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
 #include <iostream>
-Menu::Menu(QWidget *parent):QWidget(parent),qlink(nullptr)
+#include <QTimerEvent>
+Menu::Menu(QWidget *parent):QWidget(parent),qlink(nullptr),setting(nullptr)
 {
-    setWindowTitle(tr("QLinkMenu"));
+    setWindowTitle(tr("Menu"));
     // 设置 widget 大小
-    resize(Config::menuWidth, Config::menuHeight);
-
+    //resize(Config::menuWidth, Config::menuHeight);
+    setFixedSize(Config::menuWidth, Config::menuHeight);
     startButton = new QPushButton("开始新游戏",this);
     startButton->resize(Config::menuButtonWidth,Config::menuButtonHeight);
     startButton->setFont(Config::menuButtonFont);
@@ -37,16 +39,33 @@ Menu::~Menu()
     if(qlink){
         delete qlink;
     }
+    if(setting){
+        delete setting;
+    }
 }
 
 void Menu::start()
 {
-    if(qlink){
-        delete qlink;
+    if(setting){//如果setting点叉的情况下不会有startTimer 就不会delete setting
+        delete setting;
     }
-    qlink = new QLink(nullptr,this);
-    qlink->show();
-    hide();
+    setting = new Setting(nullptr,this);
+    setting->show();
+
+//    if(qlink){
+//        delete qlink;
+//    }
+//    QMessageBox messageBox(QMessageBox::NoIcon,"新游戏", "是否双人？",QMessageBox::Yes | QMessageBox::No, this);
+//    int result = messageBox.exec();
+//    if(result == QMessageBox::Yes){
+//        Config::playerNumber = 2;
+//    }else{
+//        Config::playerNumber = 1;
+//    }
+//    //Config::save(Config::configPath);
+//    qlink = new QLink(nullptr,this);
+//    qlink->show();
+//    hide();
     //connet(qlink,&QWidget::closeEvent,)
 }
 void Menu::load()
@@ -54,7 +73,9 @@ void Menu::load()
     if(qlink){
         delete qlink;
     }
-
+    if(setting){
+        delete setting;
+    }
     //绝对路径转成相对路径后去掉后缀 只保留文件名(时间)
     QString filePath = QFileDialog::getOpenFileName(this,"选择存档截图",QString::fromStdString(Config::archiveImagePath),"Image Files(*.png)");
     int first = filePath.indexOf(QString::fromStdString(Config::archiveImagePath));
@@ -75,4 +96,22 @@ void Menu::quit()
     exit(0);
 }
 
+void Menu::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == Config::gameoverID){
+        Config::gameoverID = -1;//这行必须要加!!否则会导致执行两次(可能是多线程的问题) 然后两次delete会报错
+        show();
+        delete qlink;
+        qlink = nullptr;//一定要赋值为nullptr 不然if(qlink)还是true
+        return;
+    }
+    if(event->timerId() == Config::settingSubmitID){
+        Config::settingSubmitID = -1;
+        delete setting;
+        setting = nullptr;
+        qlink = new QLink(nullptr,this);
+        qlink->show();
+        return;
+    }
 
+}

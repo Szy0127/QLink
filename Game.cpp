@@ -23,12 +23,10 @@ const QColor Game::linkLineColor = QColor(255,0,0);
 const QColor Game::hintColor = QColor(255,255,0);
 
 Game::Game()
-    : animationRemain{},propCount(0),map(nullptr),hint(nullptr)
+    : animationRemain{},propCount(0),map(nullptr),hint(nullptr),isPaused(false),gameover(false)
 {
     Config::load(Config::configPath);
     timeRemain = Config::timeLimitation;
-    gameover = false;
-    isPaused = false;
     //Config::load(configPath);
     // 设置窗口的标题
 //    setWindowTitle(tr("QLink"));
@@ -43,7 +41,7 @@ Game::Game()
     findEmptySpace();
     createPlayers();
 }
-Game::Game(std::string gameFilePath):animationRemain{},propCount(0),map(nullptr),hint(nullptr)
+Game::Game(std::string gameFilePath):animationRemain{},propCount(0),map(nullptr),hint(nullptr),isPaused(false),gameover(false)
 {
     initData();
     load(gameFilePath);
@@ -1049,4 +1047,14 @@ void Game::load(std::string fileName)
 void Game::pause()
 {
     isPaused = !isPaused;
+}
+
+Game::~Game()
+{
+    if(map){
+        for(int i = 0 ; i < Config::numberOfBlocksRow + 2 ; i++){
+            delete[] map[i];
+        }
+        delete[] map;
+    }
 }

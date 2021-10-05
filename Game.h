@@ -9,7 +9,7 @@
 
 #include "Element.h"
 
-class Game
+class Game final
 {
     static const QColor linkLineColor;
     static const QColor hintColor;
@@ -17,7 +17,7 @@ public:
     // 屏幕宽高  方块个数宽高 游戏结束时间 玩家数
     Game(std::string gameFilePath);
     Game();
-    //~Game();
+    ~Game();
 
 private:
     int dx[5] = {0,1,-1,0,0};

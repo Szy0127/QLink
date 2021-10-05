@@ -8,11 +8,11 @@ SJTU_SEP
 4 导出路径为工作目录
 5 代码中 QImage对象 构造函数为path paintImage方法参数为x y image  
 9/29 补全存档的内容 修复了QImage无法二进制保存的bug 完成存档 完成了简单的开始界面
-10/2 暂停 开始、结束界面 存档可选择  
-待完成    
-10/3 看一下设置的step width 是否可改动   
-10/4 代码结构 遗留问题   
-10/5 通过测试点   
-10/6 bug      
+10/2 暂停 开始、结束界面 存档可选择 
+10/3 修改了map可能内存泄漏的bug 
+10/5 增加settingwindow类 将qlink和settting与menu的跳转设计为startTimer与timerEvent的形式 
+看一下设置的step width 是否可改动   
+10/6 测试点   
+10/7 code review 
 
 给每种不同的block加不同的分数
