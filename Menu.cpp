@@ -52,6 +52,8 @@ void Menu::start()
     setting = new Setting(nullptr,this);
     setting->show();
 
+    hide();
+
 //    if(qlink){
 //        delete qlink;
 //    }
@@ -66,7 +68,7 @@ void Menu::start()
 //    qlink = new QLink(nullptr,this);
 //    qlink->show();
 //    hide();
-    //connet(qlink,&QWidget::closeEvent,)
+
 }
 void Menu::load()
 {

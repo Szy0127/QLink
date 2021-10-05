@@ -4,21 +4,22 @@
 #include <iostream>
 #include <QFile>
 #include <fstream>
-const int Element::stepx = 65;
-const int Element::stepy = 65;
-const int Block::width = Element::stepx;
-const int Block::height = Element::stepy;
+//实际上这里写的非常奇怪 用了很多的变量但值是一样的  希望以后可以做到实现不一样的
+int Element::stepx = Config::blockSize;
+int Element::stepy = Config::blockSize;
+int Block::width = Element::stepx;
+int Block::height = Element::stepy;
 const int Block::penWidth = 4;
 const int Block::typeAmount = 6;
 const int Block::eliminateTag = 0b1000;
 const QColor Block::BlockColor[Block::typeAmount]= {QColor(50,100,200),QColor(100,100,100),QColor(100,50,100),QColor(50,0,200),QColor(50,200,0),QColor(200,100,20)};
 const QColor Player::playerColor[2]= {QColor(255,50,50),QColor(50,50,200)};
-const int Player::width = Element::stepx;
-const int Player::height = Element::stepy;
+int Player::width = Element::stepx;
+int Player::height = Element::stepy;
 
 const QColor Prop::color = QColor(255,255,0);
-const int Prop::width = Element::stepx;
-const int Prop::height = Element::stepy;
+int Prop::width = Element::stepx;
+int Prop::height = Element::stepy;
 
 const char Prop::character[7] = "AFHSFD";//与Prop::enum顺序一致
 

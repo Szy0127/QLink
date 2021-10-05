@@ -50,6 +50,15 @@ Game::Game(std::string gameFilePath):animationRemain{},propCount(0),map(nullptr)
 
 void Game::initData()
 {
+    Element::stepx = Config::blockSize;
+    Element::stepy = Config::blockSize;
+    Block::width = Element::stepx;
+    Block::height = Element::stepy;
+    Player::width = Element::stepx;
+    Player::height = Element::stepy;
+    Prop::width = Element::stepx;
+    Prop::height = Element::stepy;
+
     keyToDirection[Qt::Key_Up] = 4;
     keyToDirection[Qt::Key_Down] = 3;
     keyToDirection[Qt::Key_Left] = 2;
@@ -447,10 +456,15 @@ bool Game::movePlayer(Player &player, int direction)
 
 void Game::createBlocks()
 {
+    int typeAmount = Block::typeAmount;
+    int blockAmount = Config::numberOfBlocksRow * Config::numberOfBlocksColumn;
+    while(blockAmount % typeAmount){
+        typeAmount--;
+    }
     srand(time(0));
     map = new bool*[Config::numberOfBlocksRow+2];
-    int *count = new int[Block::typeAmount]();//加括号会初始化为0
-    int max = Config::numberOfBlocksRow * Config::numberOfBlocksColumn / Block::typeAmount;
+    int *count = new int[typeAmount]();//加括号会初始化为0
+    int max = Config::numberOfBlocksRow * Config::numberOfBlocksColumn / typeAmount;
     for(int i = 0 ; i <= Config::numberOfBlocksRow + 1 ; i++){//从1开始 0表示紧挨着的白色方格 判断时有用
         map[i] = new bool[Config::numberOfBlocksColumn+2];
         for(int j = 0 ; j <= Config::numberOfBlocksColumn + 1 ;j++){
@@ -458,7 +472,7 @@ void Game::createBlocks()
                 bool valid = false;
                 int r;
                 while(!valid){
-                    r = rand()%Block::typeAmount;
+                    r = rand()%typeAmount;
                     if(++count[r]<=max){//改这里可以测试无解
                         valid = true;
                     }
@@ -754,7 +768,7 @@ void Game::shuffleStart()
 
 void Game::addTimeStart()
 {
-    timeRemain += 30;
+    timeRemain += Config::addTime;
     animationRemain[Prop::ADDTIME] = Config::animationDuration;
 }
 

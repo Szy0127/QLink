@@ -17,11 +17,14 @@ public:
     static int fps;
     static int width;
     static int height;
+
+    static int blockSize;
     static int numberOfBlocksRow;
     static int numberOfBlocksColumn;
 
     static int playerNumber;
 
+    static int addTime;
     static int timeLimitation;//seconds
     static int propFrequency;//seconds
 
@@ -39,6 +42,7 @@ public:
     static int menuButtonHeight;
 
     static QFont menuButtonFont;
+    static QFont settingLabelFont;
 
     static int settingWidth;
     static int settingHeight;

@@ -10,8 +10,12 @@ std::string Config::imagePath = "images/";
 
 int Config::width = 1600;
 int Config::height = 900;
+
+int Config::blockSize = 65;
+
 int Config::numberOfBlocksRow = 16;
 int Config::numberOfBlocksColumn = 9;
+int Config::addTime = 30;
 int Config::timeLimitation = 300;
 int Config::propFrequency = 10;
 int Config::playerNumber = 1;
@@ -27,10 +31,10 @@ int Config::menuHeight = 600;
 int Config::menuButtonWidth = 200;
 int Config::menuButtonHeight = 50;
 QFont Config::menuButtonFont = QFont("宋体",20);
+QFont Config::settingLabelFont = QFont("宋体",18);
 
-
-int Config::settingWidth = 600;
-int Config::settingHeight = 400;
+int Config::settingWidth = 480;
+int Config::settingHeight = 570;
 
 int Config::gameoverID = -1;
 int Config::settingSubmitID = -1;
@@ -56,6 +60,10 @@ void Config::load(std::string path)
                 height = value;
                 continue;
             }
+            if(variable == "blockSize"){
+                blockSize = value;
+                continue;
+            }
             if(variable == "numberOfBlocksRow"){
                 numberOfBlocksRow = value;
                 continue;
@@ -66,6 +74,10 @@ void Config::load(std::string path)
             }
             if(variable == "propFrequency"){
                 propFrequency = value;
+                continue;
+            }
+            if(variable == "addTime"){
+                addTime = value;
                 continue;
             }
             if(variable == "timeLimitation"){
@@ -110,9 +122,11 @@ void Config::save(std::string path)
     std::ofstream f(path);
     f<<"width "<<width<<std::endl;
     f<<"height "<<height<<std::endl;
+    f<<"blockSize "<<blockSize<<std::endl;
     f<<"numberOfBlocksRow "<<numberOfBlocksRow<<std::endl;
     f<<"numberOfBlocksColumn "<<numberOfBlocksColumn<<std::endl;
     f<<"timeLimitation "<<timeLimitation<<std::endl;
+    f<<"addTime "<<addTime<<std::endl;
     f<<"propFrequency "<<propFrequency<<std::endl;
     f<<"playerNumber "<<playerNumber<<std::endl;
     f<<"hintDuration "<<hintDuration<<std::endl;

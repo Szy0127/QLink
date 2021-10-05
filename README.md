@@ -10,9 +10,10 @@ SJTU_SEP
 9/29 补全存档的内容 修复了QImage无法二进制保存的bug 完成存档 完成了简单的开始界面
 10/2 暂停 开始、结束界面 存档可选择 
 10/3 修改了map可能内存泄漏的bug 
-10/5 增加settingwindow类 将qlink和settting与menu的跳转设计为startTimer与timerEvent的形式 
-看一下设置的step width 是否可改动   
-10/6 测试点   
-10/7 code review 
+10/5 增加settingwindow类 将qlink和settting与menu的跳转设计为startTimer与timerEvent的形式  
+10/6 修改大小导致的屏幕过大过小、图片失真问题 找一下道具和人物的图片    
+10/7 测试点  
+10/8 code review  
+10/9 答辩   
 
 给每种不同的block加不同的分数

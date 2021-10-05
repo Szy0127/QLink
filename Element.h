@@ -10,8 +10,8 @@ class Element
 {
     friend bool collide(const Element &a,const Element &b);
     public:
-    static const int stepx;
-    static const int stepy;
+    static int stepx;
+    static int stepy;
     Element(){};
     ~Element();
     Element(int ix,int iy,QColor ic = QColor(0,0,0)):x(ix),y(iy),color(ic){}// x y 为具体坐标
@@ -31,8 +31,8 @@ public:
 class Prop final:public Element
 {
 public:
-    static const int width;
-    static const int height;
+    static int width;
+    static int height;
     static const QColor color;
 
 
@@ -60,8 +60,8 @@ class Block final:public Element
 {
     friend void swapBlocks(Block &block1,Block &block2);
 public:
-    static const int width;
-    static const int height;
+    static int width;
+    static int height;
     static const int penWidth;
     static const QColor BlockColor[6];
     static const int typeAmount;
@@ -108,8 +108,8 @@ public:
 class Player final:public Element
 {
 public:
-    static const int width;
-    static const int height;
+    static int width;
+    static int height;
     static const QColor playerColor[2];
 
 private:
