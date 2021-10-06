@@ -23,7 +23,7 @@ public:
 
 protected:
     QWidget *menu;//便于回到菜单 这里使用startTimer(qlink) + timerEvent(menu)的方法
-    Game *game;//若不设置为指针 game必须在QLink的构造函数的初始化列表中进行初始化 否则会自动进行 导致无法进行Config.load操作
+    std::unique_ptr<Game> game;//若不设置为指针 game必须在QLink的构造函数的初始化列表中进行初始化 否则会自动进行 导致无法进行Config.load操作
 
     QTimer *frameUpdateTimer;
     QTimer *statusUpdateTimer;

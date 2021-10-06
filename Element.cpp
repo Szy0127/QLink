@@ -39,7 +39,7 @@ void swapBlocks(Block &block1,Block &block2){
     std::swap(block1.image,block2.image);
 
 }
-Block::Block(int ix,int iy,int t,int c):Element(ix,iy),type(t),status(0),code(c)
+Block::Block(int ix,int iy,int t,int c):Element(ix,iy),status(0),code(c),type(t)
 {
     getImage();
 }
@@ -91,7 +91,11 @@ void Block::setChosen(int playerID)
 {
     status = playerID;
 }
-Block::~Block(){}
+Block::~Block()
+{
+    //delete image;
+    //solultion等维护的数据涉及到block的复制 未指定复制构造函数 image可能使用统一地址 delete后会报错
+}
 Player::Player(int ix,int iy,QColor ic,int i):Element(ix,iy,ic),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i){}
 void Player::draw(QPainter &painter)const
 {

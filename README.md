@@ -11,8 +11,8 @@ SJTU_SEP
 10/2 暂停 开始、结束界面 存档可选择 
 10/3 修改了map可能内存泄漏的bug 
 10/5 增加settingwindow类 将qlink和settting与menu的跳转设计为startTimer与timerEvent的形式  
-10/6 修改大小导致的屏幕过大过小、图片失真问题 找一下道具和人物的图片    
-10/7 测试点  
+10/6 用智能指针
+10/7 block.image 内存泄露 sharedptr 存档格式不对try catch 修改大小导致的屏幕过大过小、图片失真问题 找一下道具和人物的图片  测试点    
 10/8 code review  
 10/9 答辩   
 

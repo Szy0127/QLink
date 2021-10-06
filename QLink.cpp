@@ -27,9 +27,9 @@ QLink::QLink(QWidget *parent,QWidget *menu,std::string gameFilePath)
     setFixedSize(Config::width, Config::height);
 
     if(gameFilePath.empty()){
-        game = new Game;
+        game.reset(new Game);
     }else{
-        game = new Game(gameFilePath);
+        game.reset(new Game(gameFilePath));
     }
 
     initTimer();
@@ -39,7 +39,6 @@ QLink::~QLink()
 {
     delete frameUpdateTimer;
     delete statusUpdateTimer;
-    delete game;
 }
 
 void QLink::updateStatus()

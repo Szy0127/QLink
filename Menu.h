@@ -7,21 +7,22 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QPushButton>
+#include <memory>
 class Menu : public QWidget
 {
 
 private:
-    QPushButton *startButton;
-    QPushButton *loadButton;
-    QPushButton *quitButton;
+    std::unique_ptr<QPushButton> startButton;
+    std::unique_ptr<QPushButton> loadButton;
+    std::unique_ptr<QPushButton> quitButton;
 
 public:
     Menu(QWidget *parent = nullptr);
     ~Menu();
 
     void timerEvent(QTimerEvent *event)override;
-    QLink * qlink;
-    Setting *setting;//如果不设置为成员 在回调函数调用后 栈上分配的setting会被释放 导致show后立刻quit
+    std::unique_ptr<QLink>  qlink;
+    std::unique_ptr<Setting> setting;//如果不设置为成员 在回调函数调用后 栈上分配的setting会被释放 导致show后立刻quit
 
     void start();
     void load();

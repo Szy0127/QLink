@@ -79,7 +79,7 @@ private:
 public:
     int code;
     int type;//0~typeAmount-1
-    //如果不用指针 会导致使用二进制整体存储block的时候报错
+    //如果不用指针 会导致使用二进制整体存储block的时候报错 如果用智能指针 会有问题 debug不出
     QImage *image;//如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
     Block(){};
     ~Block();

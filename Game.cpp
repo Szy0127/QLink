@@ -867,6 +867,7 @@ void Game::save(std::string fileName)
     size = blocks.size();
     f.write((char *)&size,sizeof(int));
     for(const auto&block:blocks){
+        //block->image.reset();
         block->image = nullptr;
         f.write((char *)&*block,sizeof(Block));
         block->getImage();

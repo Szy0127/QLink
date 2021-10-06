@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QMessageBox>
 #include <QLabel>
+#include <memory>
 #include <iostream>
 Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
 {
@@ -29,11 +30,11 @@ Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
     labelFreeze->hide();
     labelDizzy->hide();
 
-    radioButtonSingle = new QRadioButton(this);
+    radioButtonSingle.reset(new QRadioButton(this));
     radioButtonSingle->setChecked(true);
     radioButtonSingle->setText("单人");
     radioButtonSingle->move(300,50);
-    radioButtonMulti = new QRadioButton(this);
+    radioButtonMulti.reset(new QRadioButton(this));
     radioButtonMulti->setText("双人");
     radioButtonMulti->move(400,50);
 
@@ -54,14 +55,14 @@ Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
     spinBoxDizzy->hide();
 
 
-    confirm = new QPushButton(this);
+    confirm.reset(new QPushButton(this));
     confirm->setText("开始游戏");
     confirm->setFont(Config::settingLabelFont);
     confirm->move(200,500);
 
-    connect(radioButtonSingle,&QRadioButton::clicked,this,QOverload<>::of(&Setting::checkSingle));
-    connect(radioButtonMulti,&QRadioButton::clicked,this,QOverload<>::of(&Setting::checkMulti));
-    connect(confirm,&QPushButton::clicked,this,QOverload<>::of(&Setting::submit));
+    connect(&*radioButtonSingle,&QRadioButton::clicked,this,QOverload<>::of(&Setting::checkSingle));
+    connect(&*radioButtonMulti,&QRadioButton::clicked,this,QOverload<>::of(&Setting::checkMulti));
+    connect(&*confirm,&QPushButton::clicked,this,QOverload<>::of(&Setting::submit));
 
 
 }
@@ -93,18 +94,18 @@ void Setting::submit()
     Config::settingSubmitID = menu->startTimer(0);
 }
 
-void Setting::setSpinBox(QSpinBox *&box, int vmin, int vmax, int step, int vdefault, int x, int y)
+void Setting::setSpinBox(std::unique_ptr<QSpinBox> &box, int vmin, int vmax, int step, int vdefault, int x, int y)
 {
-    box = new QSpinBox(this);
+    box.reset(new QSpinBox(this));
     box->setMinimum(vmin);
     box->setMaximum(vmax);
     box->setSingleStep(step);
     box->setValue(vdefault);
     box->move(x,y);
 }
-void Setting::setLabel(QLabel *&label, QString text, int x, int y)
+void Setting::setLabel(std::unique_ptr<QLabel> &label, QString text, int x, int y)
 {
-    label = new QLabel(this);
+    label.reset(new QLabel(this));
     label->setText(text);
     label->move(x,y);
     label->setFont(Config::settingLabelFont);
