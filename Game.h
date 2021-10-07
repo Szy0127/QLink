@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <QWidget>
+
 #include <QPainter>
 #include <list>
 #include <set>

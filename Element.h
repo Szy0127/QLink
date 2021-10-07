@@ -1,6 +1,6 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
-#include <QWidget>
+
 #include <QPainter>
 #include <list>
 #include <set>

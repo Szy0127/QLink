@@ -5,8 +5,6 @@
 #include "Config.h"
 
 #include <QPainter>
-#include <QTime>
-#include <QTimer>
 #include <QKeyEvent>
 #include <iostream>
 #include <set>
