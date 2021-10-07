@@ -15,7 +15,6 @@ class Element
     Element(){};
     ~Element();
     Element(int ix,int iy,QColor ic = QColor(0,0,0)):x(ix),y(iy),color(ic){}// x y 为具体坐标
-    QWidget *parent;
     int x;//由于Qt 的paint函数是根据左上角坐标绘制 所以这里存储的xy也是左上角坐标
     int y;
     QColor color;
