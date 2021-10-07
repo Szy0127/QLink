@@ -15,7 +15,7 @@ class Game final
     static const QColor hintColor;
 public:
     // 屏幕宽高  方块个数宽高 游戏结束时间 玩家数
-    Game(std::string gameFilePath);
+    Game(std::string path);
     Game();
     ~Game();
 
@@ -139,6 +139,7 @@ protected:
     void createBlocks();
     void createPlayers();
 
+
     //void statusUpdate();
     void initTimer();
     void initData();
@@ -182,9 +183,6 @@ protected:
 
     bool link(Block const &block1, Block const &block2);//判断两个方块是否可以连接
 
-//    void paintEvent(QPaintEvent *event) override;
-//    void keyPressEvent(QKeyEvent *event) override;
-//    void mousePressEvent(QMouseEvent *event) override;
 
 public:
         bool isPaused;

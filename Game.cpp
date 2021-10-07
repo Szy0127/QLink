@@ -34,16 +34,13 @@ Game::Game()
     findEmptySpace();
     createPlayers();
 }
-Game::Game(std::string gameFilePath):animationRemain{},propCount(0),map(nullptr),hint(nullptr),isPaused(false),gameover(false)
+Game::Game(std::string path):animationRemain{},propCount(0),map(nullptr),hint(nullptr),isPaused(false),gameover(false)
 {
     //这里的顺序非常重要 必须先loadConfig 因为load中若干数据的数量是由Config先决定的
     //原来是把loadConfig直接加在load里 但这样会有个问题 因为Element Block等元素的有些量 例如width 是依赖Config的
     //而load中加载block的时候会自动getImage 而getImage需要调整图片的大小 这依赖了Block的width
     //为什么不在Config中完成Element等元素成员的赋值 因为Config仅仅作为一个配置文件 不需要知道其他什么变量依赖Config中的值
     //为什么不在getImage中使用Config 而是Block 因为getImage本身是Block的函数 使用Block的width在逻辑上更通顺
-
-    std::string path = Config::archiveFilePath + gameFilePath;
-    Config::load(path+".conf");
     initData();
     load(path);
     singlePlayer = Config::playerNumber == 1;

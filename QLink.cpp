@@ -21,17 +21,19 @@ QLink::QLink(QWidget *parent,QWidget *menu,std::string gameFilePath)
     : QWidget(parent),menu(menu),questioned(false)
 {
 
-    // 设置窗口的标题
+
     setWindowTitle(tr("QLink"));
-    // 设置 widget 大小
-    setFixedSize(Config::width, Config::height);
 
     if(gameFilePath.empty()){
         game.reset(new Game);
     }else{
-        game.reset(new Game(gameFilePath));
+        //Config包含了除Game需要变量之外的变量 故必须提前调用
+        std::string path = Config::archiveFilePath + gameFilePath;
+        Config::load(path+".conf");
+        game.reset(new Game(path));
     }
 
+    setFixedSize(Config::width, Config::height);
     initTimer();
 
 }
