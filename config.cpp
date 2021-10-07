@@ -40,7 +40,7 @@ int Config::gameoverID = -1;
 int Config::settingSubmitID = -1;
 
 int Config::maxWidth = 1800;
-int Config::maxHeight = 1000;
+int Config::maxHeight = 900;
 
 
 void Config::load(std::string path)

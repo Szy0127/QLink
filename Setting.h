@@ -47,6 +47,7 @@ public:
     void setLabel(std::unique_ptr<QLabel> &label,QString text,int x,int y);
     void checkSingle();
     void checkMulti();
+    void changeMaxMN();
 };
 
 #endif // SETTING_H
