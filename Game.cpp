@@ -870,7 +870,7 @@ void Game::save(std::string fileName)
         //block->image.reset();
         block->image = nullptr;
         f.write((char *)&*block,sizeof(Block));
-        block->getImage();
+        block->getImage();//保存完仍然需要显示 如果在这两句话的中间执行了一次frameupdate操作会出问题
     }
 
     size = players.size();
@@ -924,10 +924,6 @@ void Game::save(std::string fileName)
         f.write((char *)&*hint,sizeof(Hint));
     }
 
-//    size = Config::numberOfBlocksRow+2;
-//    f.write((char *)&size,sizeof(int));
-//    size = Config::numberOfBlocksColumn+2;
-//    f.write((char *)&size,sizeof(int));
     for(int i = 0 ; i < Config::numberOfBlocksRow+2 ; i++){
         f.write((char *)map[i],sizeof(bool)*(Config::numberOfBlocksColumn+2));
     }
@@ -951,6 +947,7 @@ void Game::load(std::string fileName)
 
     Config::load(path+".conf");
     std::ifstream f(path,std::ios::binary);
+
 
     int size;
 

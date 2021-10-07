@@ -80,10 +80,13 @@ public:
     int code;
     int type;//0~typeAmount-1
     //如果不用指针 会导致使用二进制整体存储block的时候报错 如果用智能指针 会有问题 debug不出
-    QImage *image;//如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
+    //如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
+    //std::shared_ptr<QImage> image; 用智能指针会有问题
+    QImage *image;
     Block(){};
     ~Block();
     Block(int ix,int iy,int t,int c);
+    Block(const Block &r);
     virtual void draw(QPainter &painter)const override;
     bool operator <(const Block &b)const{ // set
         return code < b.code;

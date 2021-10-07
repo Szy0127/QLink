@@ -72,6 +72,7 @@ void Menu::load()
         QMessageBox::information(this, "错误", "未发现相应存档，请检查文件名");
         return;
     }
+
     qlink.reset(new QLink(nullptr,this,filePath.toStdString()));
     qlink->show();
     hide();

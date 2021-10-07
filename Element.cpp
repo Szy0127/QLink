@@ -43,10 +43,17 @@ Block::Block(int ix,int iy,int t,int c):Element(ix,iy),status(0),code(c),type(t)
 {
     getImage();
 }
+Block::Block(const Block &r):Element(r.x,r.y),image(nullptr)//只有solution会复制block image是没用的
+{
+    status = r.status;
+    code = r.code;
+    type = r.type;
+}
 void Block::getImage()
 {
     QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+".png");
     image = new QImage(path);
+    //image.reset(new QImage(path));
     *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
 }
 void Block::draw(QPainter &painter)const
@@ -60,12 +67,6 @@ void Block::draw(QPainter &painter)const
     }
 
     pen.setWidth(penWidth);
-    pen.setStyle(Qt::SolidLine);
-//    QBrush brush;
-//    brush.setColor(BlockColor[type]);
-//    brush.setStyle(Qt::SolidPattern);
-//    painter.setPen(pen);
-//    painter.setBrush(brush);
     painter.setBrush(Qt::NoBrush);
     painter.setPen(pen);
     painter.drawImage(x,y,*image);
@@ -93,8 +94,7 @@ void Block::setChosen(int playerID)
 }
 Block::~Block()
 {
-    //delete image;
-    //solultion等维护的数据涉及到block的复制 未指定复制构造函数 image可能使用统一地址 delete后会报错
+    delete image;//solultion等维护的数据涉及到block的复制 如果复制构造函数将image指向的内容共享 此处delete会崩溃
 }
 Player::Player(int ix,int iy,QColor ic,int i):Element(ix,iy,ic),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i){}
 void Player::draw(QPainter &painter)const
