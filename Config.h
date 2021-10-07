@@ -18,6 +18,9 @@ public:
     static int width;
     static int height;
 
+    static int maxWidth;
+    static int maxHeight;
+
     static int blockSize;
     static int numberOfBlocksRow;
     static int numberOfBlocksColumn;

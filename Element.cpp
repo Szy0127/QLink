@@ -51,7 +51,7 @@ Block::Block(const Block &r):Element(r.x,r.y),image(nullptr)//只有solution会�
 }
 void Block::getImage()
 {
-    QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+".png");
+    QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+"_30.png");
     image = new QImage(path);
     //image.reset(new QImage(path));
     *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);

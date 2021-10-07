@@ -39,6 +39,10 @@ int Config::settingHeight = 570;
 int Config::gameoverID = -1;
 int Config::settingSubmitID = -1;
 
+int Config::maxWidth = 1800;
+int Config::maxHeight = 1000;
+
+
 void Config::load(std::string path)
 {
     std::ifstream file(path);

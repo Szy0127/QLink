@@ -213,8 +213,12 @@ public:
         //如果有不确定的变量使得read困难 可以在write的时候统一先write size flag等
 
 
-        void save(std::string fileName);
-        void load(std::string fileName);
+        //save与load保存游戏相关变量 但很多数据的长度依赖Config中的值
+        //若save与load中额外保存这些值 游戏中的逻辑也会用到Config 所以必须调用loadConfig
+        //连续调用 会导致加载Block时调用的getImage依赖的Block::width 没有办法更新成Config::blockSize 故需要分开调用 并initData
+        void save(std::string path);
+        //考虑到QImage的内存存储方式是位置的 不存储QImage而是在读取后重新生成 故load后block的样式与本地image文件有关
+        void load(std::string path);
         void pause();
 
 };

@@ -100,6 +100,7 @@ void Menu::timerEvent(QTimerEvent *event)
         setting.reset();
         qlink.reset(new QLink(nullptr,this));
         qlink->show();
+        hide();
         return;
     }
 

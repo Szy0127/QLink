@@ -121,7 +121,9 @@ void QLink::save()
     filePathName += time;
     filePathName += ".png";
     if(p.save(filePathName,"png")){
-        game->save(time.toStdString());
+        std::string path = Config::archiveFilePath + time.toStdString();
+        Config::save(path+".conf");
+        game->save(path);
         QMessageBox::information(this, "提示", "保存成功！");
     }else{
         QMessageBox::information(this, "提示", "保存失败！请检查存档目录是否被修改！");
