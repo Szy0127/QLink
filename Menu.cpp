@@ -73,9 +73,14 @@ void Menu::load()
         return;
     }
 
-    qlink.reset(new QLink(nullptr,this,filePath.toStdString()));
-    qlink->show();
-    hide();
+
+    try {
+        qlink.reset(new QLink(nullptr,this,filePath.toStdString()));
+        qlink->show();
+        hide();
+    } catch (char const* e) {
+        QMessageBox::warning(this,"错误",e);
+    }
 }
 void Menu::quit()
 {
@@ -98,9 +103,14 @@ void Menu::timerEvent(QTimerEvent *event)
 //        delete setting;
 //        setting = nullptr;
         setting.reset();
-        qlink.reset(new QLink(nullptr,this));
-        qlink->show();
-        hide();
+        try {
+            qlink.reset(new QLink(nullptr,this));
+            qlink->show();
+            hide();
+        } catch (char const* e) {
+            QMessageBox::warning(this,"错误",e);
+        }
+
         return;
     }
 

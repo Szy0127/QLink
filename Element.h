@@ -61,6 +61,7 @@ class Block final:public Element
 public:
     static int width;
     static int height;
+    static int imageSize;
     static const int penWidth;
     static const QColor BlockColor[6];
     static const int typeAmount;
@@ -72,6 +73,8 @@ public:
      默认玩家数量 <8 及用3bit可表示 将第四位设置为1表示已被消除 status |= 0b1000
      从已被消除的状态找到对应玩家 status &= ~0b1000
      */
+    static void getImageSize();//用户可选择连续的BlockSize而图片size是离散的 30 40-80
+    //如果在构造函数中写 读档的执行不了 如果在getImage写 没有必要 因为这个只需要计算一次
 private:
     int status;
 

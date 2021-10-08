@@ -2,13 +2,14 @@
 #include "Element.h"
 #include <Config.h>
 #include <iostream>
-#include <QFile>
+#include <QFileInfo>
 #include <fstream>
 //实际上这里写的非常奇怪 用了很多的变量但值是一样的  希望以后可以做到实现不一样的
 int Element::stepx = Config::blockSize;
 int Element::stepy = Config::blockSize;
 int Block::width = Element::stepx;
 int Block::height = Element::stepy;
+int Block::imageSize = 65;
 const int Block::penWidth = 4;
 const int Block::typeAmount = 6;
 const int Block::eliminateTag = 0b1000;
@@ -51,10 +52,40 @@ Block::Block(const Block &r):Element(r.x,r.y),image(nullptr)//只有solution会�
 }
 void Block::getImage()
 {
-    QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+".png");
+
+    QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+"_"+QString::number(imageSize)+".png");
+    QFileInfo file(path);
+    if(!file.exists()){
+        throw "图片缺失";
+    }
     image = new QImage(path);
     //image.reset(new QImage(path));
     *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
+}
+void Block::getImageSize()
+{
+    if(width <= 35){
+        imageSize = 30;
+        return;
+    }
+    if(35 < width && width <=45){
+        imageSize = 40;
+        return;
+    }
+    if(45 < width && width <=55){
+        imageSize = 50;
+        return;
+    }
+    if(55 < width && width <=65){
+        imageSize = 60;
+        return;
+    }
+    if(65 < width && width <=75){
+        imageSize = 70;
+        return;
+    }
+    imageSize = 80;
+
 }
 void Block::draw(QPainter &painter)const
 {

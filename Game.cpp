@@ -54,6 +54,7 @@ void Game::initData()
     Player::height = Element::stepy;
     Prop::width = Element::stepx;
     Prop::height = Element::stepy;
+    Block::getImageSize();
 
     keyToDirection[Qt::Key_Up] = 4;
     keyToDirection[Qt::Key_Down] = 3;

@@ -44,7 +44,7 @@ Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
     y = 100;
     setSpinBox(spinBoxn,6,20,1,Config::numberOfBlocksRow,xbegin,y);
     setSpinBox(spinBoxm,6,14,1,Config::numberOfBlocksColumn,xbegin+100,y);
-    setSpinBox(spinBoxBlock,40,80,5,Config::blockSize,xbegin,y+=50);
+    setSpinBox(spinBoxBlock,30,80,5,Config::blockSize,xbegin,y+=50);
     spinBoxn->setMaximum(Config::maxWidth/spinBoxBlock->value()-2);
     spinBoxm->setMaximum(Config::maxHeight/spinBoxBlock->value()-2);
     setSpinBox(spinBoxTime,10,300,20,Config::timeLimitation,xbegin,y+=50);
