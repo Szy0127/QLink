@@ -116,8 +116,9 @@ class Player final:public Element
 public:
     static int width;
     static int height;
+    static int imageSize;
     static const QColor playerColor[2];
-
+    static void getImageSize();
 private:
     Player operator=(Player&);
     std::shared_ptr<Block> block;

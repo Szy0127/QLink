@@ -14,9 +14,10 @@ const int Block::penWidth = 4;
 const int Block::typeAmount = 6;
 const int Block::eliminateTag = 0b1000;
 const QColor Block::BlockColor[Block::typeAmount]= {QColor(50,100,200),QColor(100,100,100),QColor(100,50,100),QColor(50,0,200),QColor(50,200,0),QColor(200,100,20)};
-const QColor Player::playerColor[2]= {QColor(255,50,50),QColor(50,50,200)};
+const QColor Player::playerColor[2]= {QColor(50,50,200),QColor(255,50,50)};
 int Player::width = Element::stepx;
 int Player::height = Element::stepy;
+int Player::imageSize = Block::imageSize;
 
 const QColor Prop::color = QColor(255,255,0);
 int Prop::width = Element::stepx;
@@ -56,11 +57,11 @@ void Block::getImage()
     QString path(QString::fromStdString(Config::imagePath)+QString::number(type)+"_"+QString::number(imageSize)+".png");
     QFileInfo file(path);
     if(!file.exists()){
-        throw "图片缺失";
+        throw "方块图片缺失";
     }
     image = new QImage(path);
     //image.reset(new QImage(path));
-    *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
+    *image = image->scaledToWidth(width).scaledToHeight(height);
 }
 void Block::getImageSize()
 {
@@ -137,14 +138,39 @@ Player::Player(const Player &r):Element(r.x,r.y,r.color),block(r.block),score(0)
 }
 void Player::getImage()
 {
-    QString path(QString::fromStdString(Config::imagePath)+"p"+QString::number(id)+".png");
+    QString path(QString::fromStdString(Config::imagePath)+"p"+QString::number(id)+"_"+QString::number(imageSize)+".png");
     QFileInfo file(path);
     if(!file.exists()){
-        throw "图片缺失";
+        throw "人物图片缺失";
     }
     image = new QImage(path);
     //image.reset(new QImage(path));
-    *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
+    *image = image->scaledToWidth(width).scaledToHeight(height);
+}
+void Player::getImageSize()
+{
+    if(width <= 35){
+        imageSize = 30;
+        return;
+    }
+    if(35 < width && width <=45){
+        imageSize = 40;
+        return;
+    }
+    if(45 < width && width <=55){
+        imageSize = 50;
+        return;
+    }
+    if(55 < width && width <=65){
+        imageSize = 60;
+        return;
+    }
+    if(65 < width && width <=75){
+        imageSize = 70;
+        return;
+    }
+    imageSize = 80;
+
 }
 void Player::draw(QPainter &painter)const
 {
