@@ -12,7 +12,7 @@ int main()
     /*Test code end*/
 
     /*Your work should be here.*/
-    Game game;
-    std::cout<<game.blocks[1][0].type<<game.blocks[3][0].type<<std::endl;
+    //Game game;
+    //std::cout<<game.blocks[1][0].type<<game.blocks[3][0].type<<std::endl;
     return 0;
 }

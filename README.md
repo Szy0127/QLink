@@ -13,8 +13,8 @@ SJTU_SEP
 10/5 增加settingwindow类 将qlink和settting与menu的跳转设计为startTimer与timerEvent的形式    
 10/6 用智能指针  
 10/7 修改大小导致的屏幕过大过小  测试点          
-10/8 ps改不同size的图片 加道具图片
-10/9 code review  答辩     
+10/8 ps改不同size的图片 
+10/9 加道具图片 做存档 code review  答辩     
 
 给每种不同的block加不同的分数
 存档格式不对 导致二进制read直接错位 导致所有对象的成员解析出错 出现无法预估的问题 直接崩溃 trycatch无效

@@ -90,15 +90,20 @@ bool Game::link(const Block &block1,const Block &block2)
 }
 Game::Game()
 {
-    int type[m*n] = {0,1,2,1,0,4,5,3,2,0,1,2,3,4,5,3,4,5,5,4,3,2,1,0,1,0,2,4,3,5,1,3,0,4,2,5,5,2,3,1,4,0,0,1,4,5,2,3};
+    int type[m*n] = {0,-1,2,1,0,-1,5,3,2,0,1,-1,-1,4,5,4,-1,-1,-1,4,3,2,1,0,1,0,2,-1,3,5,1,3,0,4,-1,5,5,2,3,1,4,0,0,-1,4,5,2,3};
     for(int i = 0 ; i <= n + 1 ; i++){//从1开始 0表示紧挨着的白色方格 判断时有用
         for(int j = 0 ; j <= m + 1 ;j++){
             if(i != 0 && i != n + 1 && j!=0 && j!= m + 1){
                 int code = i*100+j;
                 //当指向该内存的最后一个指针被销毁时 调用第二个参数(deleter) 自动释放内存
 
-                blocks[i-1][j-1] = Block(1,1,type[(i-1)*m+j-1],code);
-                map[i][j] = true;
+                if(type[(i-1)*m+j-1]!=-1){
+                    blocks[i-1][j-1] = Block(1,1,type[(i-1)*m+j-1],code);
+                    map[i][j] = true;
+                }else{
+                    blocks[i-1][j-1] = Block();
+                    map[i][j] = false;
+                }
             }else{
                 map[i][j] = false;
             }
