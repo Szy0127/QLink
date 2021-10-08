@@ -156,6 +156,9 @@ void Setting::changeMaxMN()
 void Setting::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
+    case Qt::Key_Escape:
+        close();
+        return;
         case Qt::Key_Return:
         submit();
         return;
