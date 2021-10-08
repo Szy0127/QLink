@@ -75,7 +75,8 @@ public:
      */
     static void getImageSize();//用户可选择连续的BlockSize而图片size是离散的 30 40-80
     //如果在构造函数中写 读档的执行不了 如果在getImage写 没有必要 因为这个只需要计算一次
-private:
+private:  
+    Block& operator=(Block &r);//维护Block的数据结构有点多 而block涉及到image 需要管理指针 必须保证没有意外的赋值操作出现 player同理
     int status;
 
 public:
@@ -88,7 +89,7 @@ public:
     Block(){};
     ~Block();
     Block(int ix,int iy,int t,int c);
-    Block(const Block &r);
+    Block(const Block &r);//solution会复制block
     virtual void draw(QPainter &painter)const override;
     bool operator <(const Block &b)const{ // set
         return code < b.code;
@@ -118,15 +119,18 @@ public:
     static const QColor playerColor[2];
 
 private:
+    Player operator=(Player&);
     std::shared_ptr<Block> block;
     int score;
     int dizzySecondsRemain;
     int freezeSecondsRemain;
 public:
     int id;//1 2 3 4
+    QImage *image;
     Player(){};
     ~Player();
     Player(int ix,int iy,QColor ic,int i);
+    Player(const Player& r);
     virtual void draw(QPainter &painter)const override;
     void setBlock(std::shared_ptr<Block> b);
     void removeBlock();
@@ -141,6 +145,7 @@ public:
     void updateDizzy();
     void setFreeze(int t);
     void setDizzy(int t);
+    void getImage();
 };
 
 

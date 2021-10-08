@@ -97,7 +97,7 @@ void Game::initData()
 
 void Game::updateStatus()
 {
-    if(isPaused){
+    if(isPaused || gameover){
         return;
     }
     propCount++;
@@ -331,7 +331,7 @@ void Game::removeTwoBlocks(std::shared_ptr<Block> block1, std::shared_ptr<Block>
     findSolutions();
 
     //如果被提示了 消除提示动画
-    if(removeHint(*block1,*block2)){
+    if(removeHint(*block1,*block2)&& !solutions.empty()){
         getRandomHint();
     }
 
@@ -346,7 +346,7 @@ bool Game::removeHint(const Block &block1, const Block &block2)
     int code1 = hint->solution.block1.code;
     int code2 = hint->solution.block2.code;
     if(code1 == block1.code || code1 == block2.code || code2 == block1.code || code2 == block2.code){
-        hint.release();
+        hint.reset();
         return true;
     }
     return false;
@@ -467,13 +467,14 @@ void Game::createBlocks()
         for(int j = 0 ; j <= Config::numberOfBlocksColumn + 1 ;j++){
             if(i != 0 && i != Config::numberOfBlocksRow + 1 && j!=0 && j!= Config::numberOfBlocksColumn + 1){
                 bool valid = false;
-                int r;
-                while(!valid){
-                    r = rand()%typeAmount;
-                    if(++count[r]<=max){//改这里可以测试无解
-                        valid = true;
-                    }
-                }
+//                int r;
+//                while(!valid){
+//                    r = rand()%typeAmount;
+//                    if(++count[r]<=max){
+//                        valid = true;
+//                    }
+//                }
+                int r = rand()%typeAmount;//注释上面 留下这句 测试无解
                 int code = i*100+j;
                 //当指向该内存的最后一个指针被销毁时 调用第二个参数(deleter) 自动释放内存
                 std::shared_ptr<Block> block(new Block(xbegin+(i-1)*Block::width,ybegin+(j-1)*Block::height,r,code));
@@ -721,8 +722,12 @@ void Game::createPlayers()
     }
 }
 
-void Game::getRandomHint()//外部保证!solutions.empty()
+void Game::getRandomHint()
 {
+    if(solutions.empty()){//如果空 %0会崩溃
+        hint.reset();
+        return;
+    }
     int loc = rand() % solutions.size();//随机解的位置
     int index = 0;//当前遍历到的解的位置
     for(const auto &solution : solutions){
@@ -876,9 +881,12 @@ void Game::save(std::string path)
         code = 0;
         if(player.getBlock()){
             code = player.getBlock()->code;
-            player.removeBlock();
+            player.removeBlock();//保存完如果接着玩的话必须再恢复这个block
         }
+        player.image = nullptr;
         f.write((char *)&player,sizeof(Player));
+        player.setBlock(findBlockByCode(code));
+        player.getImage();
         f.write((char *)&code,sizeof(int));
     }
 
@@ -970,6 +978,7 @@ void Game::load(std::string path)
         if(code){
             player.setBlock(findBlockByCode(code));
         }
+        player.getImage();
         players.push_back(std::move(player));
     }
 

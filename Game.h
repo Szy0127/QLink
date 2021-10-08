@@ -48,13 +48,19 @@ private:
         Block block1;//hint需要高亮 故不存code  set需要自定义比较 故不存地址
         Block block2;
         Solution(){};
-        Solution(Block b1,Block b2):block1(b1),block2(b2){//必须用初始化列表 因为block没有默认构造函数
-            if(block1.code > block2.code){
-                std::swap(block1,block2);
-            }
-        }
+        Solution(Block b1,Block b2):block1(b1),block2(b2){}
         bool operator <(const Solution &b)const{
-            return block1.code*10000+block2.code<b.block1.code*10000+b.block2.code;
+            int c1 = block1.code;
+            int c2 = block2.code;
+            int c3 = b.block1.code;
+            int c4 = b.block2.code;
+            if(c1 > c2){
+                std::swap(c1,c2);
+            }
+            if(c3 > c4){
+                std::swap(c3,c4);
+            }
+            return c1 * 10000 + c2 < c3 * 10000 + c4;
         }
     };
 
@@ -87,7 +93,7 @@ private:
 
     void removeTwoBlocks(std::shared_ptr<Block> b1,std::shared_ptr<Block> b2);//删除block的逻辑 延迟删除 故不在link后调用而是在linkLine到时后调用
 
-    //开始道具对应的功能后 startTime 计时并得到对应的标记 通过timerEvent检测倒计时结束
+
 
 protected:
 

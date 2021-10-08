@@ -40,7 +40,7 @@ void swapBlocks(Block &block1,Block &block2){
     std::swap(block1.image,block2.image);
 
 }
-Block::Block(int ix,int iy,int t,int c):Element(ix,iy),status(0),code(c),type(t)
+Block::Block(int ix,int iy,int t,int c):Element(ix,iy),status(0),code(c),type(t),image(nullptr)
 {
     getImage();
 }
@@ -127,23 +127,43 @@ Block::~Block()
 {
     delete image;//solultion等维护的数据涉及到block的复制 如果复制构造函数将image指向的内容共享 此处delete会崩溃
 }
-Player::Player(int ix,int iy,QColor ic,int i):Element(ix,iy,ic),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i){}
+Player::Player(int ix,int iy,QColor ic,int i):Element(ix,iy,ic),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i)
+{
+    getImage();
+}
+Player::Player(const Player &r):Element(r.x,r.y,r.color),block(r.block),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(r.id)
+{
+    getImage();
+}
+void Player::getImage()
+{
+    QString path(QString::fromStdString(Config::imagePath)+"p"+QString::number(id)+".png");
+    QFileInfo file(path);
+    if(!file.exists()){
+        throw "图片缺失";
+    }
+    image = new QImage(path);
+    //image.reset(new QImage(path));
+    *image = image->scaledToWidth(Block::width).scaledToHeight(Block::height);
+}
 void Player::draw(QPainter &painter)const
 {
-    if(isFreeze()){
-        painter.setBrush(Qt::black);
-    }else{
-        painter.setBrush(color);
-    }
+    painter.drawImage(x,y,*image);
+
+    QPen pen;
+    pen.setWidth(Block::penWidth);
+    pen.setStyle(Qt::SolidLine);
     if(isDizzy()){
-        QPen pen;
         pen.setColor(Prop::color);
-        pen.setWidth(Block::penWidth);
-        pen.setStyle(Qt::SolidLine);
-        painter.setPen(pen);
     }else{
-        painter.setPen(Qt::NoPen);
+        if(isFreeze()){
+            pen.setColor(Qt::black);
+        }else{
+            pen.setColor(color);
+        }
     }
+    painter.setPen(pen);
+    painter.setBrush(Qt::NoBrush);
     painter.drawEllipse(x,y,width,height);
 }
 void Player::move(int dx, int dy)
@@ -215,7 +235,10 @@ void Player::updateDizzy()
     }
     dizzySecondsRemain--;
 }
-Player::~Player(){}
+Player::~Player()
+{
+    delete image;
+}
 void Prop::draw(QPainter &painter)const
 {
     painter.setPen(Qt::NoPen);
