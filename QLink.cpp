@@ -102,6 +102,9 @@ void QLink::keyPressEvent(QKeyEvent *event)
     }
 
     switch (event->key()){
+    case Qt::Key_Escape:
+        close();
+        return;
     case Qt::Key_P:
         game->pause();
         if(game->isPaused){

@@ -12,6 +12,7 @@ class Setting final: public QWidget
 {
 public:
     Setting(QWidget *parent = nullptr,QWidget *menu = nullptr);
+    void keyPressEvent(QKeyEvent *event) override;
     //menu不能用智能指针 因为setting销毁后menu一直存在 没有必要也不能销毁
     QWidget *menu;
 

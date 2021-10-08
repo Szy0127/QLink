@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QTimerEvent>
+#include <QKeyEvent>
 #include <memory>
 
 Menu::Menu(QWidget *parent):QWidget(parent),qlink(nullptr),setting(nullptr)
@@ -113,5 +114,23 @@ void Menu::timerEvent(QTimerEvent *event)
 
         return;
     }
-
+}
+void Menu::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Return:
+        if(startButton->hasFocus()){
+            start();
+            return;
+        }
+        if(loadButton->hasFocus()){
+            load();
+            return;
+        }
+        if(quitButton->hasFocus()){
+            quit();
+            return;
+        }
+        return;
+    }
 }

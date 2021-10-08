@@ -21,6 +21,7 @@ public:
     ~Menu();
 
     void timerEvent(QTimerEvent *event)override;
+    void keyPressEvent(QKeyEvent *event) override;
     std::unique_ptr<QLink>  qlink;
     std::unique_ptr<Setting> setting;//如果不设置为成员 在回调函数调用后 栈上分配的setting会被释放 导致show后立刻quit
 

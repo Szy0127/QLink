@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <memory>
 #include <iostream>
+#include <QKeyEvent>
 Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
 {
     Config::load(Config::configPath);
@@ -42,8 +43,8 @@ Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
 
     xbegin = 300;
     y = 100;
-    setSpinBox(spinBoxn,6,20,1,Config::numberOfBlocksRow,xbegin,y);
-    setSpinBox(spinBoxm,6,14,1,Config::numberOfBlocksColumn,xbegin+100,y);
+    setSpinBox(spinBoxn,4,20,1,Config::numberOfBlocksRow,xbegin,y);
+    setSpinBox(spinBoxm,3,14,1,Config::numberOfBlocksColumn,xbegin+100,y);
     setSpinBox(spinBoxBlock,30,80,5,Config::blockSize,xbegin,y+=50);
     spinBoxn->setMaximum(Config::maxWidth/spinBoxBlock->value()-2);
     spinBoxm->setMaximum(Config::maxHeight/spinBoxBlock->value()-2);
@@ -151,4 +152,12 @@ void Setting::changeMaxMN()
     //如果修改的时候spinBoxn->value > max 会自动调整
     spinBoxn->setMaximum(Config::maxWidth/spinBoxBlock->value()-2);
     spinBoxm->setMaximum(Config::maxHeight/spinBoxBlock->value()-2);
+}
+void Setting::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+        case Qt::Key_Return:
+        submit();
+        return;
+    }
 }
