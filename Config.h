@@ -8,7 +8,6 @@
 class Config final
 {
 
-
 public:
     static std::string configPath;
     static std::string archiveFilePath;
