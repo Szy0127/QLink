@@ -41,11 +41,11 @@ void swapBlocks(Block &block1,Block &block2){
     std::swap(block1.image,block2.image);
 
 }
-Block::Block(int ix,int iy,int t,int c):Element(ix,iy),status(0),code(c),type(t),image(nullptr)
+Block::Block(int ix,int iy,int t,int c):Element(ix,iy),status(0),code(c),type(t)
 {
     getImage();
 }
-Block::Block(const Block &r):Element(r.x,r.y),image(nullptr)//只有solution会复制block image是没用的
+Block::Block(const Block &r):Element(r.x,r.y)//只有solution会复制block image是没用的
 {
     status = r.status;
     code = r.code;
@@ -128,11 +128,11 @@ Block::~Block()
 {
     delete image;//solultion等维护的数据涉及到block的复制 如果复制构造函数将image指向的内容共享 此处delete会崩溃
 }
-Player::Player(int ix,int iy,QColor ic,int i):Element(ix,iy,ic),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i)
+Player::Player(int ix,int iy,int i):Element(ix,iy),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i)
 {
     getImage();
 }
-Player::Player(const Player &r):Element(r.x,r.y,r.color),block(r.block),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(r.id)
+Player::Player(const Player &r):Element(r.x,r.y),block(r.block),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(r.id)
 {
     getImage();
 }
@@ -192,7 +192,7 @@ void Player::draw(QPainter &painter)const
         painter.setPen(pen);
         painter.drawEllipse(x,y,width,height);
     }
-    pen.setColor(color);
+    pen.setColor(playerColor[id-1]);
     pen.setWidth(Block::penWidth);
     painter.setPen(pen);
     painter.drawEllipse(x,y,width,height);
@@ -284,7 +284,7 @@ void Prop::draw(QPainter &painter)const
 //    painter.drawText(x + width/2 - fontSize/2, y + height/2 + fontSize/2,QString(Prop::character[type]));
     painter.drawImage(x,y,*image);
 }
-Prop::Prop(int ix,int iy,QColor ic,int t):Element(ix,iy,ic),type(t)
+Prop::Prop(int ix,int iy,int t):Element(ix,iy),type(t)
 {
     getImage();
 }
@@ -299,7 +299,7 @@ void Prop::getImage()
     //image.reset(new QImage(path));
     *image = image->scaledToWidth(width).scaledToHeight(height);
 }
-Prop::Prop(const Prop& r):Element(r.x,r.y,r.color),type(r.type)
+Prop::Prop(const Prop& r):Element(r.x,r.y),type(r.type)
 {
     getImage();
 }

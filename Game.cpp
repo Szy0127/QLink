@@ -692,7 +692,7 @@ void Game::createOneProp()
             type = Prop::DIZZY;
         }
     }
-    Prop prop(empty.x,empty.y,Prop::color,type);
+    Prop prop(empty.x,empty.y,type);
     props.push_back(std::move(prop));
     removeEmptyspace(prop);
 }
@@ -701,7 +701,7 @@ void Game::createPlayers()
     for (int i = 0; i < Config::playerNumber; i++)
     {
         Point empty = getRandomSpace();
-        Player player(empty.x,empty.y,Player::playerColor[i],i+1);
+        Player player(empty.x,empty.y,i+1);
         players.push_back(std::move(player));
         removeEmptyspace(player);
     }

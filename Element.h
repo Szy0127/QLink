@@ -14,14 +14,16 @@ class Element
     static int stepy;
     Element(){};
     ~Element();
-    Element(int ix,int iy,QColor ic = QColor(0,0,0)):x(ix),y(iy),color(ic){}// x y 为具体坐标
+    Element(int ix,int iy):x(ix),y(iy),image(nullptr){}// x y 为具体坐标
     int x;//由于Qt 的paint函数是根据左上角坐标绘制 所以这里存储的xy也是左上角坐标
     int y;
-    QColor color;
+    //QColor color;
+    QImage *image;
 public:
     virtual void move(int dx,int dy);//-1 0 1
 
     virtual void draw(QPainter &painter)const=0 ;
+    virtual void getImage()=0;
 //    virtual int getWidth()const=0;
 //    virtual int getHeight()const=0;
 
@@ -54,16 +56,15 @@ private:
 public:
 
     int type;
-    QImage *image;
     Prop(){};
     ~Prop();
     Prop(const Prop&r);
-    Prop(int ix,int iy,QColor ic,int t);
-    virtual void draw(QPainter &painter)const override;
+    Prop(int ix,int iy,int t);
+    void draw(QPainter &painter)const override;
     bool operator ==(const Prop &b)const{
         return x == b.x && y == b.y && type == b.type;//实际上不会在同一个位置存在2个以上道具 不需要判断type
     }
-    void getImage();
+    void getImage()override;
 };
 
 class Block final:public Element
@@ -96,12 +97,11 @@ public:
     //如果不用指针 会导致使用二进制整体存储block的时候报错 如果用智能指针 会有问题 debug不出
     //如果在draw里根据type去loadimage 会导致效率很低 很卡 所以交换的时候需要同时交换image和type
     //std::shared_ptr<QImage> image; 用智能指针会有问题
-    QImage *image;
     Block(){};
     ~Block();
     Block(int ix,int iy,int t,int c);
     Block(const Block &r);//solution会复制block
-    virtual void draw(QPainter &painter)const override;
+    void draw(QPainter &painter)const override;
     bool operator <(const Block &b)const{ // set
         return code < b.code;
     }
@@ -118,7 +118,7 @@ public:
     int getPlayerIndex()const;//玩家1 2 3 4  对应players[0] [1] [2] [3]    0表示未被选中
     void setUnchosen();//消除后无法被选中 故能被选中的block一定状态是0 直接赋值即可
     void setChosen(int playerID);
-    void getImage();
+    void getImage()override;
 
 };
 
@@ -132,18 +132,18 @@ public:
     static void getImageSize();
 private:
     Player operator=(Player&);
+
     std::shared_ptr<Block> block;
     int score;
     int dizzySecondsRemain;
     int freezeSecondsRemain;
 public:
     int id;//1 2 3 4
-    QImage *image;
     Player(){};
     ~Player();
-    Player(int ix,int iy,QColor ic,int i);
+    Player(int ix,int iy,int i);
     Player(const Player& r);
-    virtual void draw(QPainter &painter)const override;
+    void draw(QPainter &painter)const override;
     void setBlock(std::shared_ptr<Block> b);
     void removeBlock();
     std::shared_ptr<Block> getBlock()const;
@@ -157,7 +157,7 @@ public:
     void updateDizzy();
     void setFreeze(int t);
     void setDizzy(int t);
-    void getImage();
+    void getImage()override;
 };
 
 
