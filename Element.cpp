@@ -14,7 +14,7 @@ const int Block::penWidth = 4;
 const int Block::typeAmount = 6;
 const int Block::eliminateTag = 0b1000;
 const QColor Block::BlockColor[Block::typeAmount]= {QColor(50,100,200),QColor(100,100,100),QColor(100,50,100),QColor(50,0,200),QColor(50,200,0),QColor(200,100,20)};
-const QColor Player::playerColor[2]= {QColor(50,50,200),QColor(255,50,50)};
+const QColor Player::playerColor[2]= {QColor(0,80,150),QColor(255,50,50)};
 int Player::width = Element::stepx;
 int Player::height = Element::stepy;
 int Player::imageSize = Block::imageSize;
@@ -23,7 +23,7 @@ const QColor Prop::color = QColor(255,255,0);
 int Prop::width = Element::stepx;
 int Prop::height = Element::stepy;
 
-const char Prop::character[7] = "AFHSFD";//与Prop::enum顺序一致
+std::string Prop::typeName[Prop::typeAmount] = {"time","flash","hint","shuffle","freeze","dizzy"};
 
 Element::~Element(){}
 
@@ -175,22 +175,29 @@ void Player::getImageSize()
 void Player::draw(QPainter &painter)const
 {
     painter.drawImage(x,y,*image);
+    painter.setBrush(Qt::NoBrush);
 
     QPen pen;
-    pen.setWidth(Block::penWidth);
     pen.setStyle(Qt::SolidLine);
+    if(isFreeze()){
+        pen.setColor(Qt::black);
+        pen.setWidth(Block::penWidth+6);
+        painter.setPen(pen);
+        painter.drawEllipse(x,y,width,height);
+    }
+
     if(isDizzy()){
         pen.setColor(Prop::color);
-    }else{
-        if(isFreeze()){
-            pen.setColor(Qt::black);
-        }else{
-            pen.setColor(color);
-        }
+        pen.setWidth(Block::penWidth+3);
+        painter.setPen(pen);
+        painter.drawEllipse(x,y,width,height);
     }
+    pen.setColor(color);
+    pen.setWidth(Block::penWidth);
     painter.setPen(pen);
-    painter.setBrush(Qt::NoBrush);
     painter.drawEllipse(x,y,width,height);
+
+
 }
 void Player::move(int dx, int dy)
 {
@@ -267,13 +274,36 @@ Player::~Player()
 }
 void Prop::draw(QPainter &painter)const
 {
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(color);
-    painter.drawEllipse(x,y,width,height);
-    int fontSize = 20;
-    QFont font("宋体",fontSize,QFont::Bold,true);
-    painter.setFont(font);
-    painter.setPen(Qt::red);
-    painter.drawText(x + width/2 - fontSize/2, y + height/2 + fontSize/2,QString(Prop::character[type]));
+//    painter.setPen(Qt::NoPen);
+//    painter.setBrush(color);
+//    painter.drawEllipse(x,y,width,height);
+//    int fontSize = 20;
+//    QFont font("宋体",fontSize,QFont::Bold,true);
+//    painter.setFont(font);
+//    painter.setPen(Qt::red);
+//    painter.drawText(x + width/2 - fontSize/2, y + height/2 + fontSize/2,QString(Prop::character[type]));
+    painter.drawImage(x,y,*image);
 }
-Prop::~Prop(){}
+Prop::Prop(int ix,int iy,QColor ic,int t):Element(ix,iy,ic),type(t)
+{
+    getImage();
+}
+void Prop::getImage()
+{
+    QString path(QString::fromStdString(Config::imagePath)+QString::fromStdString(typeName[type])+".png");
+    QFileInfo file(path);
+    if(!file.exists()){
+        throw "道具图片缺失";
+    }
+    image = new QImage(path);
+    //image.reset(new QImage(path));
+    *image = image->scaledToWidth(width).scaledToHeight(height);
+}
+Prop::Prop(const Prop& r):Element(r.x,r.y,r.color),type(r.type)
+{
+    getImage();
+}
+Prop::~Prop()
+{
+    delete image;
+}

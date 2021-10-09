@@ -29,13 +29,15 @@ public:
 //enum type{ADDTIME,SHUFFLE,HINT,FLASH,FREEZE,DIZZY}
 class Prop final:public Element
 {
+
 public:
+    enum{typeAmount = 6};
     static int width;
     static int height;
     static const QColor color;
 
 
-    static const char character[7];
+    static std::string typeName[typeAmount];
 
     enum{singlePlayerAmount = 4};
     enum{multiPlayerAmount = 5};
@@ -45,14 +47,23 @@ public:
     enum{ADDTIME,FLASH,HINT,SHUFFLE,FREEZE,DIZZY};//把需要动画的放在前面
     enum{animationAmount = 2};//记录动画时间的数组 在编译时确定大小 需要字面量 static const虽然是常量但还是变量
 
+private:
+    //Prop(const Prop&);
+    Prop operator=(const Prop&);
+
+public:
+
     int type;
+    QImage *image;
     Prop(){};
     ~Prop();
-    Prop(int ix,int iy,QColor ic,int t):Element(ix,iy,ic),type(t){}
+    Prop(const Prop&r);
+    Prop(int ix,int iy,QColor ic,int t);
     virtual void draw(QPainter &painter)const override;
     bool operator ==(const Prop &b)const{
         return x == b.x && y == b.y && type == b.type;//实际上不会在同一个位置存在2个以上道具 不需要判断type
     }
+    void getImage();
 };
 
 class Block final:public Element

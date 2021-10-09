@@ -846,8 +846,10 @@ void Game::save(std::string path)
 
     int size = props.size();
     f.write((char *)&size,sizeof(int));
-    for(const auto&prop:props){
+    for(auto&prop:props){
+        prop.image = nullptr;
         f.write((char *)&prop,sizeof(Prop));
+        prop.getImage();
     }
 
     size = blocks.size();
@@ -941,6 +943,7 @@ void Game::load(std::string path)
     for(int i = 0 ;i < size ; i++){
         Prop prop;
         f.read((char *)&prop,sizeof(Prop));
+        prop.getImage();
         props.push_back(std::move(prop));
     }
 
