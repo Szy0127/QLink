@@ -439,7 +439,7 @@ bool Game::movePlayer(Player &player, int direction)
 void Game::createBlocks()
 {
     int typeAmount = Block::typeAmount;
-    int blockAmount = Config::numberOfBlocksRow * Config::numberOfBlocksColumn;
+    int blockAmount = Config::numberOfBlocksRow * Config::numberOfBlocksColumn / 2;
     while(blockAmount % typeAmount){
         typeAmount--;
     }
