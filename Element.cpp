@@ -25,7 +25,10 @@ int Prop::height = Element::stepy;
 
 std::string Prop::typeName[Prop::typeAmount] = {"time","flash","hint","shuffle","freeze","dizzy"};
 
-Element::~Element(){}
+Element::~Element()
+{
+    delete image;
+}
 
 bool collide(const Element &a,const Element &b)
 {
@@ -35,6 +38,10 @@ void Element::move(int dx,int dy)//-1 0 1
 {
     x += dx * stepx;
     y += dy * stepy;
+}
+void Element::draw(QPainter &painter)const
+{
+    painter.drawImage(x,y,*image);//x y 是左上角
 }
 void swapBlocks(Block &block1,Block &block2){
     std::swap(block1.type,block2.type);
@@ -101,7 +108,7 @@ void Block::draw(QPainter &painter)const
     pen.setWidth(penWidth);
     painter.setBrush(Qt::NoBrush);
     painter.setPen(pen);
-    painter.drawImage(x,y,*image);
+    Element::draw(painter);
     painter.drawRect(x,y,width,height);//x y 是左上角
 
 
@@ -126,7 +133,8 @@ void Block::setChosen(int playerID)
 }
 Block::~Block()
 {
-    delete image;//solultion等维护的数据涉及到block的复制 如果复制构造函数将image指向的内容共享 此处delete会崩溃
+    //已在基类delete
+    //delete image;//solultion等维护的数据涉及到block的复制 如果复制构造函数将image指向的内容共享 此处delete会崩溃
 }
 Player::Player(int ix,int iy,int i):Element(ix,iy),block(nullptr),score(0),dizzySecondsRemain(0),freezeSecondsRemain(0),id(i)
 {
@@ -174,7 +182,7 @@ void Player::getImageSize()
 }
 void Player::draw(QPainter &painter)const
 {
-    painter.drawImage(x,y,*image);
+    Element::draw(painter);
     painter.setBrush(Qt::NoBrush);
 
     QPen pen;
@@ -270,19 +278,11 @@ void Player::updateDizzy()
 }
 Player::~Player()
 {
-    delete image;
+
 }
 void Prop::draw(QPainter &painter)const
 {
-//    painter.setPen(Qt::NoPen);
-//    painter.setBrush(color);
-//    painter.drawEllipse(x,y,width,height);
-//    int fontSize = 20;
-//    QFont font("宋体",fontSize,QFont::Bold,true);
-//    painter.setFont(font);
-//    painter.setPen(Qt::red);
-//    painter.drawText(x + width/2 - fontSize/2, y + height/2 + fontSize/2,QString(Prop::character[type]));
-    painter.drawImage(x,y,*image);
+    Element::draw(painter);
 }
 Prop::Prop(int ix,int iy,int t):Element(ix,iy),type(t)
 {
@@ -305,5 +305,5 @@ Prop::Prop(const Prop& r):Element(r.x,r.y),type(r.type)
 }
 Prop::~Prop()
 {
-    delete image;
+
 }

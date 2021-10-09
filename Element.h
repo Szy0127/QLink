@@ -12,6 +12,10 @@ class Element
     public:
     static int stepx;
     static int stepy;
+
+private:
+    const Element& operator=(const Element&);//涉及到image指针 不可拷贝 拷贝构造函数由派生类定义
+public:
     Element(){};
     ~Element();
     Element(int ix,int iy):x(ix),y(iy),image(nullptr){}// x y 为具体坐标
@@ -22,7 +26,7 @@ class Element
 public:
     virtual void move(int dx,int dy);//-1 0 1
 
-    virtual void draw(QPainter &painter)const=0 ;
+    virtual void draw(QPainter &painter)const ;
     virtual void getImage()=0;
 //    virtual int getWidth()const=0;
 //    virtual int getHeight()const=0;
