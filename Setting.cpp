@@ -21,7 +21,7 @@ Setting::Setting(QWidget *parent,QWidget *menu):QWidget(parent),menu(menu)
     int y = 50;
     setLabel(labelMode,"游戏模式",xbegin,y);
     setLabel(labelmn,"方块数量",xbegin,y+=50);
-    setLabel(labelmn,"方块大小",xbegin,y+=50);
+    setLabel(labelBlock,"方块大小",xbegin,y+=50);
     setLabel(labelTime,"时间限制",xbegin,y+=50);
     setLabel(labelProp,"道具出现频率",xbegin,y+=50);
     setLabel(labelHint,"提示持续时间",xbegin,y+=50);
