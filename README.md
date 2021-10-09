@@ -6,15 +6,15 @@
 - default.conf文件保存了最近一次游戏的配置 可在本地修改也可在游戏中修改 这个文件随意修改也会有问题 需要在setting.cpp中限制   
 
 ### 代码文件说明
-- Config.h/cpp 保存了QLink整体的配置信息 分为以下三部分 第一部分会保存到本地文件
+1. Config.h/cpp 保存了QLink整体的配置信息 分为以下三部分 第一部分会保存到本地文件
  - 可改动：方块数量、大小、道具时间等每局游戏可自定义的变量
  - 不可改动：存储路径、目录大小、字体大小等
  - 不同类间传递：QLink游戏结束或Setting设置完成提交时产生的startTimer信号ID
-- Element.h/cpp 定义了一些游戏需要的元素 基类有QImage*成员 可优化 `Element`的三个派生类如下
+2. Element.h/cpp 定义了一些游戏需要的元素 基类有QImage*成员 可优化 `Element`的三个派生类如下
  - `Prop` 道具 有加时、打乱、提示、闪现、眩晕、冻结
  - `Block` 方块 玩家需要消除的对象 
  - `Player` 玩家 在`namespace gameSZY`的两个字典中设置玩家对应的移动操作可支持大于二人游戏
-- Game.h/cpp 保存了连连看游戏主体的逻辑 使用基础的数据结构与函数 与Qt无关 定义如下私有结构体
+3. Game.h/cpp 保存了连连看游戏主体的逻辑 使用基础的数据结构与函数 与Qt无关 定义如下私有结构体
  - `Point` 记录二维坐标 自定义比pair使用方便一点
  - `Solution` 表示两个block构成的一组解
  - `LinkLine` 两个block及其拐点构成的线段动画
@@ -33,16 +33,16 @@
  -  动画剩余时间(加时与闪现)`int animationRemain[Prop::animationAmount]`
  -  游戏剩余时间`int timeRemain`
  -  是否单人游戏`bool singlePlayer` 便于单双人不同逻辑时的判断
-- QLink.h/cpp 在Game的基础上增加了交互 是真正的游戏界面
+4. QLink.h/cpp 在Game的基础上增加了交互 是真正的游戏界面
  - `paintEvent` 绘制
  - `keyPressEvent`存档 移动
  - `mousePressEvent`闪现
  - `QTimer` 更新状态
-- Menu.h/cpp 菜单 游戏结束后会返回到菜单 不会退出程序
+5. Menu.h/cpp 菜单 游戏结束后会返回到菜单 不会退出程序
  - Start 开始新游戏 跳转到Setting
  - Load 载入游戏 archive文件中的存档
  - Quit 退出程序
-- Setting.h/cpp 用户设置Config中的可改动部分 并保存 限制了上下限
+6. Setting.h/cpp 用户设置Config中的可改动部分 并保存 限制了上下限
  - 游戏模式(单双人)
  - 方块大小
  - 方块数量(上下限会随方块大小变动 保证屏幕放下 Config中设置了最大屏幕大小)
