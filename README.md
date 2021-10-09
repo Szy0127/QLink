@@ -18,8 +18,9 @@
  - `Point` 记录二维坐标 自定义比pair使用方便一点
  - `Solution` 表示两个block构成的一组解
  - `LinkLine` 两个block及其拐点构成的线段动画
- - `Hint` 提示的解与剩余时间
-维护以下成员变量
+ - `Hint` 提示的解与剩余时间   
+    
+  维护以下成员变量
  - 玩家集合`std::vector<Player> players`
  - 方块集合`std::list<std::shared_ptr<Block>> blocks`
  - 道具集合`std::list<Prop> props`
