@@ -1,5 +1,5 @@
 # SJTU_SEP 
-![Image text](./sample.png)
+![Image text](https://github.com/Szy0127/QLink/blob/main/sample.png)
 ### 本地依赖文件说明   
 - archive文件夹保存存档 其中file中保存了可读的.conf配置文件及不可读的二进制文件 载入游戏时选择图片即可 无对应存档会报错 但如果名字没改 改了内容 游戏会崩溃(待优化)
 - images文件夹保存了游戏需要加载的人物、方块、道具图片 无对应图片会报错 可自定义图片   
