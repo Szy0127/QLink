@@ -102,7 +102,7 @@ public:
     }
 
     void setEliminate();//位运算的操作封装起来使用会更加友好
-    bool isEliminated()const;
+    bool isEliminated()const;//但是如果指定为inline 要么将定义直接放在类内写 这样会自动转换为inline 要么在类外但是必须在同一文件中定义 两种都不符合接口与实现分离的理念
 
     int getPlayerIndex()const;//玩家1 2 3 4  对应players[0] [1] [2] [3]    0表示未被选中
     void setUnchosen();//消除后无法被选中 故能被选中的block一定状态是0 直接赋值即可

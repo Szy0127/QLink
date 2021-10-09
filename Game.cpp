@@ -468,14 +468,14 @@ void Game::createBlocks()
         for(int j = 0 ; j <= Config::numberOfBlocksColumn + 1 ;j++){
             if(i != 0 && i != Config::numberOfBlocksRow + 1 && j!=0 && j!= Config::numberOfBlocksColumn + 1){
                 bool valid = false;
-//                int r;
-//                while(!valid){
-//                    r = rand()%typeAmount;
-//                    if(++count[r]<=max){
-//                        valid = true;
-//                    }
-//                }
-                int r = rand()%typeAmount;//注释上面 留下这句 测试无解
+                int r;
+                while(!valid){
+                    r = rand()%typeAmount;
+                    if(++count[r]<=max){
+                        valid = true;
+                    }
+                }
+                //int r = rand()%typeAmount;//注释上面 留下这句 测试无解
                 int code = i*100+j;
                 //当指向该内存的最后一个指针被销毁时 调用第二个参数(deleter) 自动释放内存
                 std::shared_ptr<Block> block(new Block(xbegin+(i-1)*Block::width,ybegin+(j-1)*Block::height,r,code));
