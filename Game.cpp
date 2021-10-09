@@ -16,6 +16,7 @@
 
 #define millisecond 1000
 
+using gameSZY::Game;
 
 const QColor Game::linkLineColor = QColor(255,0,0);
 const QColor Game::hintColor = QColor(255,255,0);
@@ -56,23 +57,6 @@ void Game::initData()
     Prop::height = Element::stepy;
     Block::getImageSize();
     Player::getImageSize();
-
-    keyToDirection[Qt::Key_Up] = 4;
-    keyToDirection[Qt::Key_Down] = 3;
-    keyToDirection[Qt::Key_Left] = 2;
-    keyToDirection[Qt::Key_Right] = 1;
-    keyToDirection[Qt::Key_W] = 4;
-    keyToDirection[Qt::Key_A] = 2;
-    keyToDirection[Qt::Key_S] = 3;
-    keyToDirection[Qt::Key_D] = 1;
-    keyToPlayerID[Qt::Key_Up] = 1;
-    keyToPlayerID[Qt::Key_Down] = 1;
-    keyToPlayerID[Qt::Key_Left] = 1;
-    keyToPlayerID[Qt::Key_Right] = 1;
-    keyToPlayerID[Qt::Key_W] = 2;
-    keyToPlayerID[Qt::Key_A] = 2;
-    keyToPlayerID[Qt::Key_S] = 2;
-    keyToPlayerID[Qt::Key_D] = 2;
 
     xbegin = (Config::width - Config::numberOfBlocksRow * Block::width)/2;
     ybegin = (Config::height - Config::numberOfBlocksColumn * Block::height)/2;

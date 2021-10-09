@@ -9,6 +9,33 @@
 
 #include "Element.h"
 
+namespace gameSZY
+{
+static const int dx[5] = {0,1,-1,0,0};
+static const int dy[5] = {0,0,0,1,-1};
+
+//map比较复杂 必须这样初始化 且加static
+static std::map<int,int> keyToDirection = {
+    {Qt::Key_Up,4},
+    {Qt::Key_Down,3},
+    {Qt::Key_Left,2},
+    {Qt::Key_Right,1},
+    {Qt::Key_W,4},
+    {Qt::Key_A,2},
+    {Qt::Key_S,3},
+    {Qt::Key_D,1},
+};
+static std::map<int,int> keyToPlayerID = {
+    {Qt::Key_Up,1},
+    {Qt::Key_Down,1},
+    {Qt::Key_Left,1},
+    {Qt::Key_Right,1},
+    {Qt::Key_W,2},
+    {Qt::Key_A,2},
+    {Qt::Key_S,2},
+    {Qt::Key_D,2},
+};
+
 class Game final
 {
     static const QColor linkLineColor;
@@ -20,11 +47,6 @@ public:
     ~Game();
 
 private:
-    int dx[5] = {0,1,-1,0,0};
-    int dy[5] = {0,0,0,1,-1};
-
-    std::map<int,int>keyToDirection;
-    std::map<int,int>keyToPlayerID;
 
     int xbegin,ybegin;//左上角方块的左上角
      //由方块的左上角定位到地图的左上角 (由于地图大小不是方块大小的整数倍 故可到达的左上角非0 0)
@@ -226,5 +248,7 @@ public:
         void pause();
 
 };
+}
+
 
 #endif // GAME_H

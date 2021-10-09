@@ -25,12 +25,12 @@ QLink::QLink(QWidget *parent,QWidget *menu,std::string gameFilePath)
     setWindowTitle(tr("QLink"));
 
     if(gameFilePath.empty()){
-        game.reset(new Game);
+        game.reset(new gameSZY::Game);
     }else{
         //Config包含了除Game需要变量之外的变量 故必须提前调用
         std::string path = Config::archiveFilePath + gameFilePath;
         Config::load(path+".conf");
-        game.reset(new Game(path));
+        game.reset(new gameSZY::Game(path));
     }
 
     setFixedSize(Config::width, Config::height);
