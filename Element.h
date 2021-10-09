@@ -53,10 +53,6 @@ public:
     enum{ADDTIME,FLASH,HINT,SHUFFLE,FREEZE,DIZZY};//把需要动画的放在前面
     enum{animationAmount = 2};//记录动画时间的数组 在编译时确定大小 需要字面量 static const虽然是常量但还是变量
 
-private:
-    //Prop(const Prop&);
-    Prop operator=(const Prop&);
-
 public:
 
     int type;
@@ -92,7 +88,6 @@ public:
     static void getImageSize();//用户可选择连续的BlockSize而图片size是离散的 30 40-80
     //如果在构造函数中写 读档的执行不了 如果在getImage写 没有必要 因为这个只需要计算一次
 private:  
-    Block& operator=(Block &r);//维护Block的数据结构有点多 而block涉及到image 需要管理指针 必须保证没有意外的赋值操作出现 player同理
     int status;
 
 public:
@@ -135,8 +130,6 @@ public:
     static const QColor playerColor[2];
     static void getImageSize();
 private:
-    Player operator=(Player&);
-
     std::shared_ptr<Block> block;
     int score;
     int dizzySecondsRemain;
